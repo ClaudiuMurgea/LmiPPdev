@@ -1,0 +1,50 @@
+#container {  
+    width: 316px;  
+    margin:0 auto;
+}   
+#keyboard { 
+    padding: 0;  
+    list-style: none;
+    position:absolute;
+    margin:0 auto;  
+    z-index:999;
+}  
+#keyboard li {  
+    /* -moz-box-shadow: 8px 8px 8px #444;
+    -webkit-box-shadow: 8px 8px 8px #444;
+    box-shadow: 8px 8px 8px #444; */
+    /* box-shadow:-10px -5px 4px #ccc; */
+    box-shadow: 0px 0px 10px 0px #555, 0px 0px 16px 0px #777 !important;
+    font: 71%/1.5 Verdana, Sans-Serif; 
+    float: left;  
+    margin-top:8px;  
+    width: 100px;  
+    height: 60px;  
+    font-size: 24px;
+    line-height: 60px;  
+    text-align: center;  
+    /* background: #fff;  */
+    background: linear-gradient(60deg, #444, #333, #222, #333, #444, #333);
+    animation: animatedgradient 40s ease alternate infinite;
+    background-size: 500% 500%;
+    border: 1px solid #ccc;
+    outline: 1px solid #fff;
+    border-radius: 5px;  
+    color: #fff;
+    font-weight:600;
+}  
+.capslock, .tab, .left-shift, .clearl, .switch {  
+    clear: left;  
+}  
+.lastitem {  
+    margin-right: 0;  
+} 
+.box1 {
+    box-shadow: 0px 0px 10px 0px #fff, 0px 0px 16px 0px #000 !important;
+}
+.box2 {
+    box-shadow: 0px -4px 30px 0px steelblue, 0px 0px 16px 0px lightblue !important;
+}
+.box3 {
+    box-shadow: 0px -4px 30px 0px steelblue, 0px 0px 16px 0px lightblue !important;
+}

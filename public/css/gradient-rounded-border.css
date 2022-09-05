@@ -1,0 +1,35 @@
+.custom_btn {
+    /* linear-gradient(0deg,  #f3ad37, #8f6621,#fede9a) */
+    background-image: linear-gradient(to bottom, #fede9a 49%, #999 48.9%, #8f6621 55%, #f6af38 82%, #fede9a 100%);
+    border-radius: 40px;
+    box-sizing: border-box;
+    color: linear-gradient(to bottom, #fede9a 20%, #8f6621 40%, #f3ad37 100%);
+    display: block;
+    font-size:1.2rem;
+    height: 47px;
+    letter-spacing: 1px;
+    margin: 0 auto;
+    padding: 8px;
+    position: relative;
+    text-decoration: none;
+    min-width: 200px;
+}
+
+.custom_btn:hover {
+    color: #fff;
+}
+
+.custom_btn span {
+    align-items: center;
+    background: #e7e8e9;
+    border-radius: 40px;
+    display: flex;
+    justify-content: center;
+    height: 100%;
+    transition: background .5s ease;
+    width: 100%;
+}
+
+.custom_btn:hover span {
+    background: transparent;
+}
