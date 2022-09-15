@@ -9,9 +9,17 @@ if(request()->session()->has('Mapare')==false)
     session(['Mapare' => $Mapare]);
 }
 
-function Translate($Text)
+function Translate($Text,$ForcedLang="")
 {
-    if(\Session::get('lang') == 'En') {
+    $Lang=\Session::get('lang');
+
+    if($ForcedLang!="")
+    {
+        $Lang=$ForcedLang;
+    }
+
+    if($Lang == 'En')
+    {
         return $Text;
     }
 

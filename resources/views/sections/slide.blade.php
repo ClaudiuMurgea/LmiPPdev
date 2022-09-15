@@ -1,36 +1,77 @@
-<div style="max-height:96px;" class='container-fluid px-0'>
+<div style="max-height:96px;" class='container-fluid px-0' id="slide">
     <div style="width:100px;" class="c">
         <input style="display:none;" type="checkbox" id="faq-1" class="input" @if($slideActive) checked @endif>
         <h5 style="display:flex; align-items: center;margin-bottom:15px;position:relative;">
-        <!-- @if($showBack)
-            <button wire:click="back" class="custom-btn font_size-1-2"> 
+        @if($showBack)
+            <button style="margin-bottom:-1px !important;" wire:click="back" class="custom-btn font_size-1-2"> 
                 <img style="height:20px;width:20px;margin:0 auto;margin-bottom:2px;" src='slide-images/back.png'>
                 Back
             </button>
-        @endif  -->
-            <label for="faq-1">  <!-- menu_button px-2 dark_text font_size-1-2 -->
-                <div class="after" style="width:100px;min-height:48px; max-height:48px;background:rgba(25, 25, 25, 0.5);display:flex; justify-content:center; align-items:center; border-top-left-radius:8px; border-top-right-radius:8px;">
-                    <!-- <div @if($menuArrow) style="transform: rotate(180deg);margin-top:-16px;" @endif  wire:click="menuArrow()" class="button-down"></div> -->
-                    <img class="menu_img" src='slide-images/aup.png'>
+        @endif 
+            <label for="faq-1">  
+                <div class="after" style="width:100px;min-height:48px; max-height:48px;transform:translateY(17px);background:rgba(25, 25, 25, 0.5);display:flex; justify-content:center; align-items:center; border-top-left-radius:10px; border-top-right-radius:10px;">
+                    <img class="menu_img" src='slide-images/aup2.png'>
                 </div>
             </label>
         </h5>
         <div style="width:100vw !important;" class="p">
             <div class='container-fluid d-flex justify-content-between align-items-center text-light' id='navbar' wire:ignore>
-                <div class="MultiCarousel" data-items="2, 3, 3, 3" data-slide="3" id="MultiCarousel"  data-interval="1000">
-                    <div style="background: rgba(33, 37, 41, 1);font-weight:600;font-size:1.1rem" class="MultiCarousel-inner"> 
-                        <div class="item" wire:click="ShowComponent('personal', 'Jackpot')">    <img style="height:60px;width:60px;margin:0 auto;" src='slide-images/personal.png'>     <span id="personalSlide"> Personal Jackpot  </span>  </div>
-                        <div class="item" wire:click="ShowComponent('jackpots')">               <img style="height:60px;width:60px;margin:0 auto;" src='slide-images/jackpot.png'>      <span id="jackpotsSlide"> Jackpots          </span>  </div>
-                        <div class="item" wire:click="ShowComponent('tombola')">                <img style="height:60px;width:60px;margin:0 auto;" src='slide-images/raffle.png'>       <span id="tombolaSlide">  Tombola           </span>  </div>
-                        <div class="item" wire:click="ShowComponent('account', 'Level')">       <img style="height:60px;width:60px;margin:0 auto;" src='slide-images/ranking.png'>      <span id="rankingSlide">  Account Level     </span>  </div>
-                        <div class="item" wire:click="ShowComponent('bonus')">                  <img style="height:60px;width:60px;margin:0 auto;" src='slide-images/bonus.png'>        <span id="bonusSlide">    Bonus             </span>  </div>
-                        <div class="item" wire:click="ShowComponent('cashout')">                <img style="height:60px;width:60px;margin:0 auto;" src='slide-images/cashout.png'>      <span id="cashoutsSlide"> Cashouts          </span>  </div>
-                        <div class="item" wire:click="ShowComponent('settings')">               <img style="height:60px;width:60px;margin:0 auto;" src='slide-images/settings.png'>     <span id="settingsSlide"> Settings          </span>  </div>
+                <div class="MultiCarousel" data-items="@if($slideCount > 4 ) 3, 3, 3, 3 @else {{ $slideCount }},{{ $slideCount }},{{ $slideCount }},{{ $slideCount }}@endif" data-slide="3" id="MultiCarousel"  data-interval="1000">
+                    <div style="background: linear-gradient(90deg, #233, #191919, #233, #191919, #233,  #191919, #233, #191919, #233, #191919, #233, #191919, #233, #191919, #233,  #191919, #233, #191919, #233, #191919, #233);
+                    background-size: 600% 600%;
+                    animation: gradient 200s linear infinite;
+                    animation-direction: alternate;
+                    font-weight:600;font-size:1.1rem" class="MultiCarousel-inner"> 
+                        @foreach($availablePages as $index => $page)
+                            @switch(preg_replace("@\n@","",$page))
+                                @case('Jackpots')
+                                    <div class="item @if($isThisPageDefault == 'Jackpots') selected @endif" 
+                                            wire:click="ShowComponent('Jackpots')">               
+                                        <img style="height:60px;width:60px;margin:0 auto;" 
+                                                src='slide-images/jackpot.png'>      <span id="jackpotsSlide"> {{Translate('Jackpots')}}          </span>  
+                                    </div>
+                                    @break
+                                @case('Personal Jackpot')
+                                    <div class="item @if($isThisPageDefault == 'Personal Jackpot') selected @endif" 
+                                            wire:click="ShowComponent('PersonalJackpot')">    
+                                        <img style="height:60px;width:60px;margin:0 auto;" 
+                                                src='slide-images/personal.png'>     <span id="personalSlide"> {{Translate('Personal Jackpot')}}  </span>  
+                                    </div>
+                                    @break
+                                @case('Account Level')
+                                    <div class="item @if($isThisPageDefault == 'Account Level') selected @endif" 
+                                            wire:click="ShowComponent('AccountLevel')">       
+                                        <img style="height:60px;width:60px;margin:0 auto;" 
+                                                src='slide-images/ranking.png'>      <span id="rankingSlide">  {{Translate('Account Level')}}     </span>  
+                                    </div>
+                                    @break
+                                @case('Bonus')
+                                    <div class="item @if($isThisPageDefault == 'Bonus') selected @endif" 
+                                            wire:click="ShowComponent('Bonus')">                  
+                                        <img style="height:60px;width:60px;margin:0 auto;" 
+                                                src='slide-images/bonus.png'>        <span id="bonusSlide">    {{Translate('Bonus')}}             </span>  
+                                    </div>
+                                    @break
+                                @case('Cashouts')
+                                    <div class="item @if($isThisPageDefault == 'Cashouts') selected @endif" 
+                                            wire:click="ShowComponent('Cashouts')">                
+                                        <img style="height:60px;width:60px;margin:0 auto;" 
+                                                src='slide-images/cashout.png'>      <span id="cashoutsSlide"> {{Translate('Cashouts')}}          </span>  
+                                    </div>
+                                    @break
+                                @case('Settings')
+                                    <div class="item @if($isThisPageDefault == 'Settings') selected @endif" 
+                                            wire:click="ShowComponent('Settings')">               
+                                        <img style="height:60px;width:60px;margin:0 auto;" 
+                                                src='slide-images/settings.png'>     <span id="settingsSlide"> {{Translate('Settings')}}          </span>  
+                                    </div>
+                                    @break
+                                @default
+                            @endswitch
+                        @endforeach
                     </div>
-                    <!-- <div class="leftLst long-arrow-left"></div>
-                    <div class="rightLst long-arrow-right"></div> -->
-                    <img style="max-height:50px; max-width:60px;" class="leftLst" src='slide-images/aleft.png'>
-                    <img style="max-height:50px; max-width:60px;" class="rightLst"  src='slide-images/aright.png'>
+                    <img style="max-height:75px; max-width:60px;" class="leftLst"   src='slide-images/aleft2.png'>
+                    <img style="max-height:75px; max-width:60px;" class="rightLst"  src='slide-images/aright2.png'>
                 </div>
             </div>
         </div>

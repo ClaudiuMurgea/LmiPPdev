@@ -2,257 +2,315 @@
 
 namespace App\Http\Livewire;
 
-use App\Models\Page;
-use App\Models\Test;
 use Livewire\Component;
-use App\Models\Translate;
+use App\Actions\MyAction;
+use App\Models\MainSetting;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Models\CardColorBackground;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Config;
+use App\Models\MasterOnlyPlayerSetting;
 use Illuminate\Database\Eloquent\Collection;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
 
 class ApplicationLivewire extends Component
 {
-    use LivewireAlert;
+    public $slideCount;
+    // Settings
+    public $showSystemJackpots;  
+    public $showExternalJackpots;
+    public $availablePages;
 
+    // Application Initialization
+    public $mac;
+    public $MasterIP;
+    public $DeviceID;
+    public $pid;
     public $page;
-    public $titleExtra;
+    public $oldPage;
+    public $title;
+
+    public $isThisPageDefault;
     public $langStatus;
     public $slideStatus;
+    public $cardBackgrounds;
+
+    // Component / BackButton / 
     public $showComponent;
     public $showBack    = false;
     public $slideActive = true;
-    public $title;
-    public $menuArrow = false;
-    public $arrowClicked = 1;
-    
-    // public $lang;
+    /*========================*|
+    ||  Header Values
+    ||========================*/
+    public $userName;
+    public $userPoints;
+    public $userCardColor;
+    public $CardColorInt;
+
     /*========================*|
     ||  All pages
     ||========================*/
-    public $jackpots        = false;
-    public $personal        = false;
-    public $showJackpot     = false;
-    public $account         = false;
-    public $bonus           = false;
-    public $market          = false;
-    public $cashout         = false;
-    public $news            = false;
-    public $okto            = false;
-    public $pyramid         = false;
-    public $quest           = false;
-    public $tombola         = false;
-    public $settings        = false;
+    public $Jackpots        = false;
+    public $PersonalJackpot = false;
+    public $AccountLevel    = false;
+    public $Bonus           = false;
+    public $Cashouts        = false;
+    public $Settings        = false;
+    public $ShowJackpot     = false;
+
+    /*========================*|
+    ||  Jackpots
+    ||========================*/
+    public $jackpotTitle;
+    public $jackpotValue;
+    public $getExternalJackpots;
+    public $getInternalJackpots;
+
+    /*========================*|
+    ||  Bonus
+    ||========================*/
+
+    public $BonusShowCurrentBenefit;
+    public $monthCollectedPoints;
+    public $monthRedeemedPoints;
+    public $totalPoints;
+    public $dayCollectedPoints;
+    public $dayRedeemedPoints;
 
     /*========================*| 
-    ||  Page -- Cashout 
+    ||  Cashouts
     ||========================*/
-    public $content;
-    public $property = [0];
-    public $keyboard = false;
-    public $message = false;
-    public $searchTerm = "";
-    /*========================*| 
-    ||  Page -- ShowJackpot
-    ||========================*/
-    public $var = false;
-    public $showAll = false;
+    public $cashoutValues;
 
-    public $i = 0;
+    public $oldName;
+    public $oldId;
 
-    protected $listeners = ['buy'];
-
-
-    public function mount()
+    public function boot()
     {
-        // \Session::forget('lang');
-        \Session::put('lang', 'En');
-        $this->title = 'Jackpots';
-        $this->jackpots = true;
+        $this->MasterIp = DB::connection('mysql_main')->select("SELECT LmiPP.GetMasterIP() MasterIP")[0]->MasterIP;
+        config(['database.connections.mysql_master.host' => $this->MasterIp]);
+    }
+    public function mount()
+    {   
+        // $mac="00:2e:15:00:14:82"; //premier 122
+        // $mac="00:1b:eb:91:a9:3d"; //fructa 108
+        $this->mac="00:1b:eb:91:a9:3d";
+        
+        // Example for caching 
+        // if(! Cache::get('settings'))
+        // {
+        //     $appSettings = MainSetting::first();
+        //     Cache::forever('settings', $appSettings);
+        // }
+
+        //     $this->appSettings = Cache::get('settings');
+
+        // use MAC to get PID
+        $getPID = DB::connection('mysql_main')->select("select LmiPP.MAC2PID('".$this->mac."') PID");
+        $this->pid = $getPID[0]->PID;
+
+        // use PID to get NAME
+        $getName = DB::connection('mysql_main')->select("select lmi.GET_PLAYER_NAME('".$this->pid."') Name");
+            $this->userName = $getName[0]->Name;
+
+        // use PID to get CardColor
+        $CardColor = DB::connection('mysql_main')->select("select lmi.GetPlayerMaxCard('".$this->pid."') CardColor");
+            $this->userCardColor = $CardColor[0]->CardColor;
+
+        //Card Int e levelul de card, pe care il pot folosi la schimbare de background de exemplu
+        $CardColorInt = DB::connection('mysql_main')->select("select lmi.GetPlayerMaxCardInt('".$this->pid."') CardColorInt");
+            $this->CardColorInt = $CardColorInt[0]->CardColorInt;
+        $this->cardBackgrounds = CardColorBackground::find($this->CardColorInt);
+
+        // Application Default Settings Logic 
+        $appSettings    = MainSetting::first();
+        $defaultPage = $appSettings->DefaultLandingPage;
+
+        $defaultLanguage = $appSettings->DefaultLanguage;
+
+        if($playerSettings = MasterOnlyPlayerSetting::on('mysql_master')->find($this->pid))
+        {
+            $defaultPage    = $playerSettings->LandingPage;
+            $defaultLanguage = $playerSettings->CustomLanguage;
+        }
+
+        if(\Session::get('lang')) {
+            \Session::forget('lang');
+        }
+        \Session::put('lang', $defaultLanguage);
+        $this->langStatus             = $defaultLanguage;
+
+        //Default Page data to be set (includeVar/title/page/selected)
+        $this->$defaultPage = true;
+        $this->title                = $defaultPage;
+        $this->page                 = $defaultPage;
+        $this->oldPage              = $defaultPage;
+        $this->isThisPageDefault    = $defaultPage;
+        $this->slideStatus          = $defaultPage;
+
+        $this->showSystemJackpots     =  $appSettings->ShowSystemJackpots;  
+        $this->showExternalJackpots   =  $appSettings->ShowExternalJackpots;
+        $availablePages               =  $appSettings->AvailablePages;
+        $this->availablePages         =  explode(",", $availablePages);
+        $this->slideCount = count($this->availablePages);
+        $this->BonusShowCurrentBenefit = $appSettings->BonusShowCurrentBenefit;
+            
+        // $this->func(new MyAction());
+    }
+    public function func(MyAction $param2)  {
+        dump($param2->handle(1));
     }
     public function render()
     {
-        // session(['lang' => $this->lang]);
-        if(\Session::get('lang') == 'Ro') {
-            $this->langStatus = 'Ro';
+        if($this->oldId == null) {
+            //logica pt external
+            $this->jackpotValue = DB::connection('mysql_main')->select("call LmiPP.GetExternalJackpotsValues('$this->oldName', '10')");
         } else {
-            $this->langStatus = 'En';
+            //logica pt internal
+            $this->jackpotValue = DB::connection('mysql_main')->select("call LmiPP.GetSystemJackpotsValues('$this->oldId', '10')");
         }
 
-        $qr = '';
-        $cashouts = '';
-        $marketItems = '';
-        if($this->page == 'cashout') 
-        {
-            //Cashout
-            $mac = "00:1b:eb:54:74:44";
-            $MasterIP=DB::connection('mysql_main')->select("select LmiPP.GetMasterIP() MasterIP")[0]->MasterIP;
-            config(['database.connections.mysql_master.host' => $MasterIP]);
-            $arrayToString = implode($this->property);
-            $this->searchTerm = ltrim($arrayToString, '0');
+        //la schimbare cont
+        //la 1 min
+        // dd("sau asta");
+        $getPoints = DB::connection('mysql_master')->select("select lmi.GetMasterOnlyB1Points('".$this->pid."') Points");
+        $this->userPoints = $getPoints[0]->Points;
+        // dd($this->userPoints);
 
-            $cashouts = Page::where('MaxInactiveMin', 'like', '%' . $this->searchTerm . '%')->paginate(10);
+        if($this->page == 'Cashouts') 
+        {
+            $getDeviceID =  DB::connection('mysql_main')->select("SELECT DeviceID FROM lmi.devices_last WHERE MAC='$this->mac'");
+                $this->DeviceID= $getDeviceID[0]->DeviceID;
+
+            $getCashouts= DB::connection('mysql_main')->select("SELECT Slot,FORMAT((Value/100),2) Value,Timestamp FROM lmi.Handpays WHERE DeviceID=$this->DeviceID ORDER BY `Timestamp` DESC LIMIT 10");
+                $this->cashoutValues = $getCashouts;
+        }
+        if($this->page == 'Jackpots') 
+        {
+            $this->getExternalJackpots = DB::connection('mysql_main')->select("call LmiPP.GetSystemJackpotsNames");
+            $this->getInternalJackpots = DB::connection('mysql_main')->select("call LmiPP.GetExternalJackpotsNames");
+        }
+        if($this->page == 'Bonus')
+        {
+            $currentBenefit = 'b'.$this->BonusShowCurrentBenefit;
+            $getTotalPoints = DB::connection('mysql_master')->select("call LmiPP.MasterOnlyGetPlayerBenefits('$this->pid')");
+            $this->totalPoints = $getTotalPoints[0]->$currentBenefit;
+
+            $getDailyPoints = DB::connection('mysql_main')->select("call LmiPP.GetPlayerDailyBenefits('$this->pid')");
+            $this->dayCollectedPoints = $getDailyPoints[0]->CD;
+            $this->dayRedeemedPoints = $getDailyPoints[0]->RD;
+            
+            $getMonthlyPoints = DB::connection('mysql_main')->select("call LmiPP.GetPlayerMonthlyBenefits('$this->pid')");
+            $this->monthCollectedPoints = $getMonthlyPoints[0]->CM;
+            $this->monthRedeemedPoints  = $getMonthlyPoints[0]->RM;
         } 
-        if($this->page == 'market')
-        {   //Market
-            $marketItems = Test::all();
-        }
-        if($this->page == 'okto')
-        {
-            $qr='{"merchantId":"SITM2202280707","classId":"01","operationId":"0600","other":{"merchantInfo":"clasic","extSysData":"2 00:1b:eb:96:6f:cc"}}';
-        }
-        
-        return view('livewire.application-livewire', ['cashouts' => $cashouts, 'marketItems' => $marketItems, 'qr' => $qr]);
+       
+        return view('livewire.application-livewire');
     }
-
     // Slide menu click action
-    public function ShowComponent($data, $extra = null) 
+    public function ShowComponent($data) 
     {
-        $this->page = $data;
-
-        $this->jackpots         = false;
-        $this->account          = false;
-        $this->bonus            = false;
-        $this->market           = false;
-        $this->cashout          = false;
-        $this->news             = false;
-        $this->okto             = false;
-        $this->pyramid          = false;
-        $this->quest            = false;
-        $this->tombola          = false;
-        $this->showJackpot      = false;
-        $this->settings         = false;
-        $this->personal         = false;
-
-
-        $this->$data = true;
-        $this->title = ucfirst($data);
-        $this->titleExtra = $extra ?? '';
-        $this->showBack = false;
+        if($this->oldPage != $data) 
+        {
+            $this->Jackpots         = false;
+            $this->AccountLevel     = false;
+            $this->Bonus            = false;
+            $this->Cashouts         = false;
+            $this->Settings         = false;
+            $this->PersonalJackpot  = false;
+            $this->ShowJackpot      = false;
+            
+            $this->$data    = true;
+            $this->page     = $data;
+            $this->oldPage  = $data;
+    
+            // $titleFormat becomes from AccountLevel = Account Level, puts a space before capital letter (but not first letter)
+            $titleFormat = preg_replace('/([a-z])([A-Z])/s','$1 $2', $data);
+            $this->title = $titleFormat;
+            // $this->showBack = false;
+        } else {
+            $this->oldPage = $data;
+        }
     }
     // Back button click action
     public function back()
     {
-        $this->showJackpot = false;
+        $this->ShowJackpot = false;
         $this->showBack = false;
-        $this->jackpots = true;
-        $this->titleExtra = '';
+        $this->Jackpots = true;
+        $this->page = 'Jackpots';
     }
     // Jackpots page click action to show individual ShowJackpot page
-    public function showJackpot($jackpot)
+    public function showJackpot($name, $id = null)
     {
-        $this->jackpots = false;
-        $this->showJackpot = true;
-        $this->jackpot = $jackpot;
-        $this->title = "Jackpot";
-        $this->titleExtra = $jackpot;
-        $this->showBack = true;
-    }
+        $this->Jackpots     = false;
+        $this->ShowJackpot  = true;
+        $this->jackpotTitle = ucfirst($name);
+        $this->showBack     = true;
+        $this->page         = 'ShowJackpot';
+        $this->oldPage      = 'ShowJackpot';
 
-    public function keyboard($nr) 
-    {
-        if($nr == 'back') 
-        {
-           array_pop($this->property);
-
-        } 
-        elseif($nr == 'del')
-        {
-            $this->property = [0];
-        } 
-        else
-        {
-            if((count($this->property) < 10))
-            {
-                $this->property[] = $nr;
-            } else {
-                $this->message = "Maximum number of digits reached!";
-            }
+        $this->oldName      = $name;
+        $this->oldId        = $id;
+        if($id == null) {
+            //logica pt external
+            $this->jackpotValue = DB::connection('mysql_main')->select("call LmiPP.GetExternalJackpotsValues('$name', '10')");
+            // $str="";
+            // foreach($this->jackpotValue[0] as $key => $val)
+            //     $str.="$key ";
+            // dd($str);
+        } else {
+            //logica pt internal
+            $this->jackpotValue = DB::connection('mysql_main')->select("call LmiPP.GetSystemJackpotsValues('$id', '10')");
         }
     }
-    public function showKeyboard()
-    {
-        $this->keyboard = true;
-        $this->slideActive = false;
-    }
-    public function hideKeyboard()
-    {
-        $this->keyboard = false;
-        $this->slideActive = true;
-    }
-    public function delete()
-    {
-        // $this->toDelete = $product;
-        $this->confirm('Are you sure you want to buy this product?', [
-            'showConfirmButton' => true,
-            'confirmButtonText' => 'Yes',
-            'showCancelButton' => true,
-            'cancelButtonText' => 'Cancel',
-            'position' => 'center',
-            'timer' => '20000',
-            'confirmButtonColor' => '#2C7BE5',
-            'onConfirmed' => 'buy',
-            'allowOutsideClick' => false,
-        ]);
-    }
-    // Market
-    // public function buy()
-    // {
-    //     dd('You bought it! Hurray!');
-    //     // $this->toDelete->delete();
-    // }
     public function languageStatus($status) 
     {
         \Session::forget('lang');
         \Session::put('lang', $status);
-    }
+        $this->langStatus = $status;
 
+        if($playerSettings = MasterOnlyPlayerSetting::on('mysql_master')->find($this->pid)) {
+            $playerSettings->CustomLanguage = $status;
+            $playerSettings->save();
+        } else {
+            $newPlayerSettings = new MasterOnlyPlayerSetting();
+            $newPlayerSettings->setConnection('mysql_master');
+            $newPlayerSettings->PlayerID = $this->pid;
+            $newPlayerSettings->LandingPage = '';
+            $newPlayerSettings->CustomLanguage = $status;
+        };
+    }
     public function slideStatus($status) 
     {
         $this->slideStatus = $status;
-    }
-    public function Translate($Text)
-    {
-        if(request()->session()->has('Mapare')==false)
-        {
-            $ToateCuvintele=DB::connection('mysql_main')->select("select * from Translate.Translate");
-            $Mapare=array();
-            foreach($ToateCuvintele as $data) {
-                $Mapare[$data->En]=$data->Ro;
-            }
-            session(['Mapare' => $Mapare]);
-        }
-        if(\Session::get('lang') == 'En') {
-            return $Text;
-        }
 
-        $Mapare=request()->session()->get('Mapare');
-
-        if(array_key_exists($Text,$Mapare)) {
-            return $Mapare[$Text];
-        }
-        else
-        {
-            if(request()->session()->has("DB_TRANSLATE_REQUEST_$Text")==false)
-            {
-                try { 
-                    if(DB::connection('mysql_main')->select("replace into Translate.Requests(Word) values ('$Text')"));
-                    session(["DB_TRANSLATE_REQUEST_$Text" => "gata, am pus"]);
-                } catch(\Illuminate\Database\QueryException $ex){ 
-                    // Note any method of class PDOException can be called on $ex.
-                }
-            }
-        }
-
-        return $Text;
-    }
-    public function showHide() {
-        $this->arrowClicked++;
-        if($this->arrowClicked % 2 == 0) {
-            $this->slideActive = true;
+        if($playerSettings = MasterOnlyPlayerSetting::on('mysql_master')->find($this->pid)) {
+            $playerSettings->LandingPage = $status;
+            $playerSettings->save();
         } else {
-            $this->slideActive = false;
-        }
+            $newPlayerSettings = new MasterOnlyPlayerSetting();
+            $newPlayerSettings->setConnection('mysql_master');
+            $newPlayerSettings->PlayerID = $this->pid;
+            $newPlayerSettings->LandingPage = $status;
+            $newPlayerSettings->CustomLanguage = '';
+        };
+    }
+
+    public function fire(){
+        $someModel = new MasterOnlyPlayerSetting();
+
+        $someModel->setConnection('mysql_master');
+
+        $someModel->PlayerID = 2;
+
+        $someModel->LandingPage = 'Jackpots';
+        $someModel->CustomLanguage = 'En';
+        $someModel->save();
+        dd('done');
+    }
+    public function do() 
+    {
+        
     }
 }

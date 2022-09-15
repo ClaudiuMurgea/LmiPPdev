@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Routing\UrlGenerator;
 return [
 
     /*
@@ -54,7 +55,8 @@ return [
     |
     */
 
-    'asset_url' => null,
+    // 'asset_url' => url('/'),
+    'asset_url' => url('/'),
 
     /*
     |--------------------------------------------------------------------------
