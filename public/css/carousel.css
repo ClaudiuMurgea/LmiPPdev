@@ -106,7 +106,7 @@
     left:0;
     bottom:0;
     width: 140px;
-    height: 35px;
+    height: 39px;
     border:none;
     color: rgba(255, 255, 255, 0.7); 
     font-family: 'Lato', sans-serif;
@@ -217,4 +217,11 @@
     max-width:40px;
     opacity:0.6;
     transition-duration: 0.5s;
+}
+#navbar{
+    background: linear-gradient(90deg, #191919,rgba(33, 37, 41, 1), #233, rgba(33, 37, 41, 1),rgba(33, 37, 41, 1), #191919, 
+                            rgba(33, 37, 41, 1), #191919, rgba(33, 37, 41, 1),  #191919, rgba(33, 37, 41, 1), #191919,
+                            rgba(33, 37, 41, 1), #191919, rgba(33, 37, 41, 1),rgba(33, 37, 41, 1), #233, rgba(33, 37, 41, 1), #191919);
+    box-shadow: 0px 0px 15px 1px #222;
+    position: relative;
 }

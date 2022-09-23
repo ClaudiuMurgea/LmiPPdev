@@ -1,6 +1,6 @@
 <?php
 
-use Illuminate\Routing\UrlGenerator;
+// use Illuminate\Routing\UrlGenerator;
 return [
 
     /*
@@ -56,7 +56,8 @@ return [
     */
 
     // 'asset_url' => url('/'),
-    'asset_url' => url('/'),
+    // 'asset_url' => url('http://10.109.254.161/lmiPPfix/public/'),
+    'asset_url' => null,
 
     /*
     |--------------------------------------------------------------------------

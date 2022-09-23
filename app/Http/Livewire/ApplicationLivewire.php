@@ -69,7 +69,6 @@ class ApplicationLivewire extends Component
     /*========================*|
     ||  Bonus
     ||========================*/
-
     public $BonusShowCurrentBenefit;
     public $monthCollectedPoints;
     public $monthRedeemedPoints;
@@ -81,12 +80,13 @@ class ApplicationLivewire extends Component
     ||  Cashouts
     ||========================*/
     public $cashoutValues;
-
+    public $showReturn = false;
     public $oldName;
     public $oldId;
 
     public function boot()
     {
+        //dd(\Session::get('Mapare'));
         $this->MasterIp = DB::connection('mysql_main')->select("SELECT LmiPP.GetMasterIP() MasterIP")[0]->MasterIP;
         config(['database.connections.mysql_master.host' => $this->MasterIp]);
     }
@@ -94,8 +94,7 @@ class ApplicationLivewire extends Component
     {   
         // $mac="00:2e:15:00:14:82"; //premier 122
         // $mac="00:1b:eb:91:a9:3d"; //fructa 108
-        $this->mac="00:1b:eb:91:a9:3d";
-        
+        $this->mac="00:2e:15:00:14:82";
         // Example for caching 
         // if(! Cache::get('settings'))
         // {
@@ -107,12 +106,10 @@ class ApplicationLivewire extends Component
 
         // use MAC to get PID
         $getPID = DB::connection('mysql_main')->select("select LmiPP.MAC2PID('".$this->mac."') PID");
-        $this->pid = $getPID[0]->PID;
-
+            $this->pid = $getPID[0]->PID;
         // use PID to get NAME
         $getName = DB::connection('mysql_main')->select("select lmi.GET_PLAYER_NAME('".$this->pid."') Name");
             $this->userName = $getName[0]->Name;
-
         // use PID to get CardColor
         $CardColor = DB::connection('mysql_main')->select("select lmi.GetPlayerMaxCard('".$this->pid."') CardColor");
             $this->userCardColor = $CardColor[0]->CardColor;
@@ -120,40 +117,50 @@ class ApplicationLivewire extends Component
         //Card Int e levelul de card, pe care il pot folosi la schimbare de background de exemplu
         $CardColorInt = DB::connection('mysql_main')->select("select lmi.GetPlayerMaxCardInt('".$this->pid."') CardColorInt");
             $this->CardColorInt = $CardColorInt[0]->CardColorInt;
-        $this->cardBackgrounds = CardColorBackground::find($this->CardColorInt);
+            $this->cardBackgrounds = CardColorBackground::find($this->CardColorInt);
 
         // Application Default Settings Logic 
-        $appSettings    = MainSetting::first();
-        $defaultPage = $appSettings->DefaultLandingPage;
+        $appSettings    = MainSetting::on('mysql_main')->first();
+        $defaultPage    = $appSettings->DefaultLandingPage;
 
         $defaultLanguage = $appSettings->DefaultLanguage;
-
-        if($playerSettings = MasterOnlyPlayerSetting::on('mysql_master')->find($this->pid))
+        $idleLanguage    = $appSettings->DefaultLanguage;
+        $playerSettings = MasterOnlyPlayerSetting::on('mysql_master')->find($this->pid);
+        if($playerSettings)
         {
-            $defaultPage    = $playerSettings->LandingPage;
+            $defaultPage     = $playerSettings->LandingPage;
             $defaultLanguage = $playerSettings->CustomLanguage;
         }
-
         if(\Session::get('lang')) {
             \Session::forget('lang');
+        } else {
+            \Session::put('lang', $defaultLanguage);
         }
-        \Session::put('lang', $defaultLanguage);
-        $this->langStatus             = $defaultLanguage;
+
+        if(\Session::get('idleLang')) {
+            \Session::forget('idleLang');
+        } else {
+            \Session::put('idleLang', $idleLanguage);
+        }
+
+        $this->langStatus               = $defaultLanguage;
 
         //Default Page data to be set (includeVar/title/page/selected)
         $this->$defaultPage = true;
-        $this->title                = $defaultPage;
-        $this->page                 = $defaultPage;
-        $this->oldPage              = $defaultPage;
-        $this->isThisPageDefault    = $defaultPage;
-        $this->slideStatus          = $defaultPage;
+        $this->title                    = $defaultPage;
+        $camelDefaultPage               = str_replace(' ', '', $defaultPage);
+        $this->$camelDefaultPage        = true;
+        $this->page                     = $camelDefaultPage;
+        $this->oldPage                  = $camelDefaultPage;
+        $this->isThisPageDefault        = $camelDefaultPage;
+        $this->slideStatus              = $defaultPage;
 
-        $this->showSystemJackpots     =  $appSettings->ShowSystemJackpots;  
-        $this->showExternalJackpots   =  $appSettings->ShowExternalJackpots;
-        $availablePages               =  $appSettings->AvailablePages;
-        $this->availablePages         =  explode(",", $availablePages);
-        $this->slideCount = count($this->availablePages);
-        $this->BonusShowCurrentBenefit = $appSettings->BonusShowCurrentBenefit;
+        $this->showSystemJackpots       =  $appSettings->ShowSystemJackpots;  
+        $this->showExternalJackpots     =  $appSettings->ShowExternalJackpots;
+        $availablePages                 =  $appSettings->AvailablePages;
+        $this->availablePages           =  explode(",", $availablePages);
+        $this->slideCount               = count($this->availablePages);
+        $this->BonusShowCurrentBenefit  = $appSettings->BonusShowCurrentBenefit;
             
         // $this->func(new MyAction());
     }
@@ -170,12 +177,8 @@ class ApplicationLivewire extends Component
             $this->jackpotValue = DB::connection('mysql_main')->select("call LmiPP.GetSystemJackpotsValues('$this->oldId', '10')");
         }
 
-        //la schimbare cont
-        //la 1 min
-        // dd("sau asta");
         $getPoints = DB::connection('mysql_master')->select("select lmi.GetMasterOnlyB1Points('".$this->pid."') Points");
         $this->userPoints = $getPoints[0]->Points;
-        // dd($this->userPoints);
 
         if($this->page == 'Cashouts') 
         {
@@ -227,10 +230,10 @@ class ApplicationLivewire extends Component
             // $titleFormat becomes from AccountLevel = Account Level, puts a space before capital letter (but not first letter)
             $titleFormat = preg_replace('/([a-z])([A-Z])/s','$1 $2', $data);
             $this->title = $titleFormat;
-            // $this->showBack = false;
         } else {
             $this->oldPage = $data;
         }
+        $this->showBack = false;
     }
     // Back button click action
     public function back()
@@ -270,7 +273,8 @@ class ApplicationLivewire extends Component
         \Session::put('lang', $status);
         $this->langStatus = $status;
 
-        if($playerSettings = MasterOnlyPlayerSetting::on('mysql_master')->find($this->pid)) {
+        $playerSettings = MasterOnlyPlayerSetting::on('mysql_master')->find($this->pid);
+        if($playerSettings) {
             $playerSettings->CustomLanguage = $status;
             $playerSettings->save();
         } else {
@@ -279,13 +283,15 @@ class ApplicationLivewire extends Component
             $newPlayerSettings->PlayerID = $this->pid;
             $newPlayerSettings->LandingPage = '';
             $newPlayerSettings->CustomLanguage = $status;
+            $newPlayerSettings->save();
         };
     }
     public function slideStatus($status) 
     {
         $this->slideStatus = $status;
 
-        if($playerSettings = MasterOnlyPlayerSetting::on('mysql_master')->find($this->pid)) {
+        $playerSettings = MasterOnlyPlayerSetting::on('mysql_master')->find($this->pid);
+        if($playerSettings) {
             $playerSettings->LandingPage = $status;
             $playerSettings->save();
         } else {
@@ -294,23 +300,7 @@ class ApplicationLivewire extends Component
             $newPlayerSettings->PlayerID = $this->pid;
             $newPlayerSettings->LandingPage = $status;
             $newPlayerSettings->CustomLanguage = '';
+            $newPlayerSettings->save();
         };
-    }
-
-    public function fire(){
-        $someModel = new MasterOnlyPlayerSetting();
-
-        $someModel->setConnection('mysql_master');
-
-        $someModel->PlayerID = 2;
-
-        $someModel->LandingPage = 'Jackpots';
-        $someModel->CustomLanguage = 'En';
-        $someModel->save();
-        dd('done');
-    }
-    public function do() 
-    {
-        
     }
 }

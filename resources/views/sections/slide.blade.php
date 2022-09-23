@@ -1,11 +1,11 @@
 <div style="max-height:96px;" class='container-fluid px-0' id="slide">
-    <div style="width:100px;" class="c">
+    <div style="width:100px;" class="slide_trigger">
         <input style="display:none;" type="checkbox" id="faq-1" class="input" @if($slideActive) checked @endif>
         <h5 style="display:flex; align-items: center;margin-bottom:15px;position:relative;">
         @if($showBack)
             <button style="margin-bottom:-1px !important;" wire:click="back" class="custom-btn font_size-1-2"> 
                 <img style="height:20px;width:20px;margin:0 auto;margin-bottom:2px;" src='slide-images/back.png'>
-                Back
+                {{ Translate('Back') }}
             </button>
         @endif 
             <label for="faq-1">  
@@ -14,9 +14,9 @@
                 </div>
             </label>
         </h5>
-        <div style="width:100vw !important;" class="p">
+        <div style="width:100vw !important;" class="slide_trigger2">
             <div class='container-fluid d-flex justify-content-between align-items-center text-light' id='navbar' wire:ignore>
-                <div class="MultiCarousel" data-items="@if($slideCount > 4 ) 3, 3, 3, 3 @else {{ $slideCount }},{{ $slideCount }},{{ $slideCount }},{{ $slideCount }}@endif" data-slide="3" id="MultiCarousel"  data-interval="1000">
+                <div class="MultiCarousel" data-items="@if($slideCount > 4 ) 3, 3, 3, 3 @else {{ $slideCount }},{{ $slideCount }},{{ $slideCount }},{{ $slideCount }}@endif" data-slide="3" id="MultiCarousel" data-interval="1000">
                     <div style="background: linear-gradient(90deg, #233, #191919, #233, #191919, #233,  #191919, #233, #191919, #233, #191919, #233, #191919, #233, #191919, #233,  #191919, #233, #191919, #233, #191919, #233);
                     background-size: 600% 600%;
                     animation: gradient 200s linear infinite;

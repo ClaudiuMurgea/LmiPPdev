@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class MainSetting extends Model
 {
-    protected $connection = 'mysql_master';
+    protected $connection = 'mysql_main';
 
     protected $primaryKey = 'ID';
     protected $table = 'LmiPP.MainSettings';

@@ -14,11 +14,6 @@
     text-decoration: none;
     min-width: 200px;
 }
-
-.custom_btn:hover {
-    color: #fff;
-}
-
 .custom_btn span {
     align-items: center;
     background: #e7e8e9;
@@ -29,7 +24,33 @@
     transition: background .5s ease;
     width: 100%;
 }
-
-.custom_btn:hover span {
+/* .custom_btn:hover {
+    color: #fff;
+} */
+/* .custom_btn:hover span {
     background: transparent;
+} */
+.custom_btn2 {
+    /* linear-gradient(0deg,  #f3ad37, #8f6621,#fede9a) */
+    border: 2px solid #fede9a;
+    outline:1px solid #f3ad37;
+    border-radius: 14px;
+    box-sizing: border-box;
+    color: linear-gradient(to bottom, #fede9a 20%, #8f6621 40%, #f3ad37 100%);
+    display: block;
+    font-size:1.2rem;
+    height: 47px;
+    letter-spacing: 1px;
+    margin: 0 auto;
+    padding: 0.2rem;
+    position: relative;
+    text-decoration: none;
+    min-width: 400px;
+}
+.custom_btn2 span {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }

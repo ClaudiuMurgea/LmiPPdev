@@ -1,3 +1,16 @@
+<style>
+    .bghandler{
+        background: url("{{ asset('/header-images/bg3.jpg') }}");
+        min-height:100vh;
+        max-height:100vh;
+        min-width:100vw;
+        max-width:100vw;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        background-position: center;
+        background-size: cover;
+    }
+</style>
 <section>
     <div class="text-effect mt-4">
         <span>{{ $jackpotTitle }}</span>
@@ -9,37 +22,27 @@
             </svg>
         </div>
     </div>
-    <table style="margin-top:1.5rem;" class="table1 text-center max_width font_size-1-2">
+    <table class="table1 text-center max_width font_size-1-2 mt_1-5">
         <thead>
             <tr>
-                <th style="border-top-left-radius:16px;text-align:left;padding-left:4rem;" class="opacity_0-9 ">{{ Translate('Slot')  }}</th>
-                <th style="text-align:left;padding-left:1rem;" class="opacity_0-9">{{ Translate('Value') }}</th>
-                <th style="border-top-right-radius:16px;text-align:left;" class="opacity_0-9">{{ Translate('Date')  }}</th>
+                <th style="border-top-left-radius:16px;text-align:left;padding-left:4rem;" class="opacity_0-9 ">    {{ Translate('Slot')  }}        </th>
+                <th style="text-align:left;padding-left:1rem;" class="opacity_0-9">                                 {{ Translate('Value') }}        </th>
+                <th style="border-top-right-radius:16px;text-align:left;" class="opacity_0-9">                      {{ Translate('Timestamp')  }}   </th>
             </tr>
         </thead>
         <tbody >
             @if(!count($jackpotValue))
                 <tr>
                     <td colspan="3" class="text-center">
-                        This <span style="text-decoration: underline">Jackpot</span> has not been won yet!
+                    {{ Translate('This Jackpot has not been won yet!') }}
                     </td>
                 </tr>
             @endif
             @foreach($jackpotValue as $value)
                 <tr @if($loop->last) style="box-shadow: 0 2px 6px -2px #000;" @endif class="opacity_0-9">
-                    <td style="border:none;border-bottom:3px solid transparent;border-top:3px solid transparent;text-align:left;padding-left:4rem;">{{ $value->Slot }}</td>
-                    <td style="border:none;border-bottom:3px solid transparent;border-top:3px solid transparent;text-align:left;padding-left:1rem;">{{ $value->Value }}</td>
-                    <td style="border:none;border-bottom:3px solid transparent;border-top:3px solid transparent;text-align:left;">                  {{ $value->Timestamp }}</td>
-                </tr>
-                <tr @if($loop->last) style="box-shadow: 0 2px 6px -2px #000;" @endif class="opacity_0-9">
-                    <td style="border:none;border-bottom:3px solid transparent;border-top:3px solid transparent;text-align:left;padding-left:4rem;">{{ $value->Slot }}</td>
-                    <td style="border:none;border-bottom:3px solid transparent;border-top:3px solid transparent;text-align:left;padding-left:1rem;">{{ $value->Value }}</td>
-                    <td style="border:none;border-bottom:3px solid transparent;border-top:3px solid transparent;text-align:left;">                  {{ $value->Timestamp }}</td>
-                </tr>
-                <tr @if($loop->last) style="box-shadow: 0 2px 6px -2px #000;" @endif class="opacity_0-9">
-                    <td style="border:none;border-bottom:3px solid transparent;border-top:3px solid transparent;text-align:left;padding-left:4rem;">{{ $value->Slot }}</td>
-                    <td style="border:none;border-bottom:3px solid transparent;border-top:3px solid transparent;text-align:left;padding-left:1rem;">{{ $value->Value }}</td>
-                    <td style="border:none;border-bottom:3px solid transparent;border-top:3px solid transparent;text-align:left;">                  {{ $value->Timestamp }}</td>
+                    <td style="border:none;border-bottom:3px solid transparent;border-top:3px solid transparent;text-align:left;padding-left:4rem;">{{ $value->Slot }}      </td>
+                    <td style="border:none;border-bottom:3px solid transparent;border-top:3px solid transparent;text-align:left;padding-left:1rem;">{{ $value->Value }}     </td>
+                    <td style="border:none;border-bottom:3px solid transparent;border-top:3px solid transparent;text-align:left;">                  {{ $value->Timestamp }} </td>
                 </tr>
             @endforeach
         <!-- style="border-top: 2px solid #fbb117" -->

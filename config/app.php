@@ -186,7 +186,6 @@ return [
          * Package Service Providers...
          * Added Dependencies here
          */
-        Barryvdh\Debugbar\ServiceProvider::class,
         /*
          * Application Service Providers...
          */
