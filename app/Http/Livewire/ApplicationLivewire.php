@@ -87,6 +87,7 @@ class ApplicationLivewire extends Component
     public function boot()
     {
         //dd(\Session::get('Mapare'));
+        \Session::forget('Mapare');
         $this->MasterIp = DB::connection('mysql_main')->select("SELECT LmiPP.GetMasterIP() MasterIP")[0]->MasterIP;
         config(['database.connections.mysql_master.host' => $this->MasterIp]);
     }
@@ -117,6 +118,7 @@ class ApplicationLivewire extends Component
         //Card Int e levelul de card, pe care il pot folosi la schimbare de background de exemplu
         $CardColorInt = DB::connection('mysql_main')->select("select lmi.GetPlayerMaxCardInt('".$this->pid."') CardColorInt");
             $this->CardColorInt = $CardColorInt[0]->CardColorInt;
+
             $this->cardBackgrounds = CardColorBackground::find($this->CardColorInt);
 
         // Application Default Settings Logic 
@@ -165,6 +167,7 @@ class ApplicationLivewire extends Component
         // $this->func(new MyAction());
     }
     public function func(MyAction $param2)  {
+        //This is a action that might be usefull in later stages of development
         dump($param2->handle(1));
     }
     public function render()

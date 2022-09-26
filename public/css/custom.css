@@ -773,7 +773,6 @@ h2{
     border: 1px solid #ffaa33;
     outline: 1px solid #ff7518;
     border-radius: 20px;
-    transform: perspective(500px) rotateY(15deg);
 	/* text-shadow: -6px 3px 2px rgba(0, 0, 0, 0.2);
 	box-shadow: -2px 0 0 5px rgba(0, 0, 0, 0.2); */
     transition: 0.1s;
@@ -788,11 +787,11 @@ h2{
 }
 .custom_back-button::before {
     content: '';
-    position: absolute;
+    /* position: absolute; */
     width: 100%;
     height: 100%;
     background: linear-gradient(to right, transparent, white, transparent);
-    left: -100%;
+    /* left: -100%; */
     transition: 0.1s;
 }
 .custom_back-button:active::before {

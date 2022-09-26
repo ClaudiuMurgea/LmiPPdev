@@ -5,7 +5,7 @@
     <section class="d-flex justify-content-center setting_bg">
         <div id="Romania" wire:click="languageStatus('Ro')" wire:key='1' style="display:flex; flex-direction:column;margin-right:2rem;">
             <div class="text-center">
-                <img src='language-images/ro3.png' class="language-img header-img mx-1 @if($langStatus == 'Ro') selected_wrapper @endif">
+                <img src='images/language-images/ro.png' class="language-img header-img mx-1 @if($langStatus == 'Ro') selected_wrapper @endif">
             </div>
             <div class="text-center settings_text mt_12">
                 {{Translate('Romanian')}}
@@ -13,7 +13,7 @@
         </div>
         <div id="England" wire:click="languageStatus('En')" wire:key='2' style="display:flex; flex-direction:column;margin-left:2rem;">
             <div class="text-center">
-                <img src='language-images/en3.png' class="language-img header-img mx-1 @if($langStatus == 'En') selected_wrapper @endif">
+                <img src='images/language-images/en.png' class="language-img header-img mx-1 @if($langStatus == 'En') selected_wrapper @endif">
             </div>
             <div class="text-center settings_text mt_12">
                 {{Translate('English')}}
@@ -31,7 +31,7 @@
                 @case('Jackpots')
                     <div class="d-flex d-flex flex-column" wire:click="slideStatus('Jackpots')" wire:key='3'>
                         <div class="text-center moveup">
-                            <img src='slide-images/jackpot.png' class="landing_page-img header-img mx-1 @if($slideStatus == 'Jackpots') selected_wrapper @endif">
+                            <img src='images/slide-images/jackpot.png' class="landing_page-img header-img mx-1 @if($slideStatus == 'Jackpots') selected_wrapper @endif">
                         </div>
                         <div class="text-center no_line_height settings_text mt_08">
                             {{Translate('Jackpots')}}
@@ -41,7 +41,7 @@
                 @case('Personal Jackpot')
                     <div class="d-flex d-flex flex-column" wire:click="slideStatus('Personal Jackpot')" wire:key='4'>
                         <div class="text-center moveup">
-                            <img src='slide-images/personal.png' class="ml_13 landing_page-img header-img mx-1 @if($slideStatus == 'Personal Jackpot') selected_wrapper @endif">
+                            <img src='images/slide-images/personal.png' class="ml_13 landing_page-img header-img mx-1 @if($slideStatus == 'Personal Jackpot') selected_wrapper @endif">
                         </div>
                         <div class="text-center no_line_height settings_text mt_08">
                             {{Translate('Personal Jackpot')}}
@@ -52,7 +52,7 @@
                 @case('Bonus')
                     <div class="d-flex d-flex flex-column" wire:click="slideStatus('Bonus')" wire:key='5'>
                         <div class="text-center moveup">
-                            <img src='slide-images/bonus.png' class="landing_page-img header-img mx-1 @if($slideStatus == 'Bonus') selected_wrapper @endif">
+                            <img src='images/slide-images/bonus.png' class="landing_page-img header-img mx-1 @if($slideStatus == 'Bonus') selected_wrapper @endif">
                         </div>
                         <div class="text-center no_line_height settings_text mt_08">
                             {{Translate('Bonus')}}
@@ -63,7 +63,7 @@
                 @case('Cashouts')
                     <div class="d-flex d-flex flex-column" wire:click="slideStatus('Cashouts')" wire:key='6'>
                         <div class="text-center moveup">
-                            <img src='slide-images/cashout.png' class="landing_page-img header-img mx-1 @if($slideStatus == 'Cashouts') selected_wrapper @endif">
+                            <img src='images/slide-images/cashout.png' class="landing_page-img header-img mx-1 @if($slideStatus == 'Cashouts') selected_wrapper @endif">
                         </div>
                         <div class="text-center no_line_height settings_text mt_08">
                             {{Translate('Cashouts')}}
@@ -74,7 +74,7 @@
                 @case('Account Level')
                     <div class="d-flex d-flex flex-column" wire:click="slideStatus('Account Level')" wire:key='7'>
                         <div class="text-center moveup">
-                            <img src='slide-images/ranking.png' class="landing_page-img header-img mx-1 @if($slideStatus == 'Account Level') selected_wrapper @endif">
+                            <img src='images/slide-images/ranking.png' class="landing_page-img header-img mx-1 @if($slideStatus == 'Account Level') selected_wrapper @endif">
                         </div>
                         <div class="text-center no_line_height settings_text mt_08">
                             {{Translate('Account Level')}}

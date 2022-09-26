@@ -2,7 +2,7 @@
     @include('utility.language')
     @include('sections.header')
     <!-- Pages Includes -->
-    <div class="custom_title">{{ Translate('Settings', 'Ro') }}</div>
+    <div class="custom_title">{{ Translate($title) }}</div>
     <img class="bg_wrapper" src="data:image/png;base64,{{ chunk_split(base64_encode($cardBackgrounds->BackgroundImage)) }}" alt="image" width="100" />
 
     <div class="d-flex flex-column overflow app_wrapper custom_scrollbar">
@@ -13,9 +13,9 @@
         @includeWhen($Jackpots,         'pages.jackpots')
         @includeWhen($ShowJackpot,      'pages.showjackpot')
         @includeWhen($PersonalJackpot,  'pages.personaljackpot')
-            <div class="d-none" wire:poll.5000ms>
-                &nbsp;
-            </div>
+        <div class="d-none" wire:poll.5000ms>
+            &nbsp;
+        </div>
     </div>
     @include('sections.slide')  
     <script>
@@ -24,7 +24,7 @@
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                         },
-                    url:'magic',
+                    url:'pidquery',
                     dataType: 'json',
                     type:'POST',
                     data: {},

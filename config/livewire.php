@@ -1,6 +1,6 @@
 <?php
 
-// use Illuminate\Routing\UrlGenerator;
+//use Illuminate\Routing\UrlGenerator;
 return [
 
     /*

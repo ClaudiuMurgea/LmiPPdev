@@ -4,13 +4,13 @@
         <h5 style="display:flex; align-items: center;margin-bottom:15px;position:relative;">
         @if($showBack)
             <button style="margin-bottom:-1px !important;" wire:click="back" class="custom-btn font_size-1-2"> 
-                <img style="height:20px;width:20px;margin:0 auto;margin-bottom:2px;" src='slide-images/back.png'>
+                <img style="height:20px;width:20px;margin:0 auto;margin-bottom:2px;" src='images/slide-images/back.png'>
                 {{ Translate('Back') }}
             </button>
         @endif 
             <label for="faq-1">  
                 <div class="after" style="width:100px;min-height:48px; max-height:48px;transform:translateY(17px);background:rgba(25, 25, 25, 0.5);display:flex; justify-content:center; align-items:center; border-top-left-radius:10px; border-top-right-radius:10px;">
-                    <img class="menu_img" src='slide-images/aup2.png'>
+                    <img class="menu_img" src='images/slide-images/up.png'>
                 </div>
             </label>
         </h5>
@@ -28,50 +28,50 @@
                                     <div class="item @if($isThisPageDefault == 'Jackpots') selected @endif" 
                                             wire:click="ShowComponent('Jackpots')">               
                                         <img style="height:60px;width:60px;margin:0 auto;" 
-                                                src='slide-images/jackpot.png'>      <span id="jackpotsSlide"> {{Translate('Jackpots')}}          </span>  
+                                                src='images/slide-images/jackpot.png'>      <span id="jackpotsSlide"> {{Translate('Jackpots')}}          </span>  
                                     </div>
                                     @break
                                 @case('Personal Jackpot')
                                     <div class="item @if($isThisPageDefault == 'Personal Jackpot') selected @endif" 
                                             wire:click="ShowComponent('PersonalJackpot')">    
                                         <img style="height:60px;width:60px;margin:0 auto;" 
-                                                src='slide-images/personal.png'>     <span id="personalSlide"> {{Translate('Personal Jackpot')}}  </span>  
+                                                src='images/slide-images/personal.png'>     <span id="personalSlide"> {{Translate('Personal Jackpot')}}  </span>  
                                     </div>
                                     @break
                                 @case('Account Level')
                                     <div class="item @if($isThisPageDefault == 'Account Level') selected @endif" 
                                             wire:click="ShowComponent('AccountLevel')">       
                                         <img style="height:60px;width:60px;margin:0 auto;" 
-                                                src='slide-images/ranking.png'>      <span id="rankingSlide">  {{Translate('Account Level')}}     </span>  
+                                                src='images/slide-images/ranking.png'>      <span id="rankingSlide">  {{Translate('Account Level')}}     </span>  
                                     </div>
                                     @break
                                 @case('Bonus')
                                     <div class="item @if($isThisPageDefault == 'Bonus') selected @endif" 
                                             wire:click="ShowComponent('Bonus')">                  
                                         <img style="height:60px;width:60px;margin:0 auto;" 
-                                                src='slide-images/bonus.png'>        <span id="bonusSlide">    {{Translate('Bonus')}}             </span>  
+                                                src='images/slide-images/bonus.png'>        <span id="bonusSlide">    {{Translate('Bonus')}}             </span>  
                                     </div>
                                     @break
                                 @case('Cashouts')
                                     <div class="item @if($isThisPageDefault == 'Cashouts') selected @endif" 
                                             wire:click="ShowComponent('Cashouts')">                
                                         <img style="height:60px;width:60px;margin:0 auto;" 
-                                                src='slide-images/cashout.png'>      <span id="cashoutsSlide"> {{Translate('Cashouts')}}          </span>  
+                                                src='images/slide-images/cashout.png'>      <span id="cashoutsSlide"> {{Translate('Cashouts')}}          </span>  
                                     </div>
                                     @break
                                 @case('Settings')
                                     <div class="item @if($isThisPageDefault == 'Settings') selected @endif" 
                                             wire:click="ShowComponent('Settings')">               
                                         <img style="height:60px;width:60px;margin:0 auto;" 
-                                                src='slide-images/settings.png'>     <span id="settingsSlide"> {{Translate('Settings')}}          </span>  
+                                                src='images/slide-images/settings.png'>     <span id="settingsSlide"> {{Translate('Settings')}}          </span>  
                                     </div>
                                     @break
                                 @default
                             @endswitch
                         @endforeach
                     </div>
-                    <img style="max-height:75px; max-width:60px;" class="leftLst"   src='slide-images/aleft2.png'>
-                    <img style="max-height:75px; max-width:60px;" class="rightLst"  src='slide-images/aright2.png'>
+                    <img style="max-height:75px; max-width:60px;" class="leftLst"   src='images/slide-images/left.png'>
+                    <img style="max-height:75px; max-width:60px;" class="rightLst"  src='images/slide-images/right.png'>
                 </div>
             </div>
         </div>

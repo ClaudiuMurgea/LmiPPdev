@@ -8,10 +8,13 @@ use App\Http\Controllers\PidController;
 use App\Http\Livewire\ApplicationLivewire;
 
 Route::get('/', ApplicationLivewire::class);
+Route::get('/app', ApplicationLivewire::class);
+
 Route::get('/t', function() {
     return view('test');
 });
-Route::post('magic', [PidController::class, 'index']);
+
+Route::post('pidquery', [PidController::class, 'index']);
 
 Route::get('/idle', Idle::class);
 Route::get('/interactive-idle', Interactive::class);

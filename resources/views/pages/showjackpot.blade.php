@@ -1,17 +1,17 @@
-<style>
-    .bghandler{
-        background: url("{{ asset('/header-images/bg3.jpg') }}");
-        min-height:100vh;
-        max-height:100vh;
-        min-width:100vw;
-        max-width:100vw;
-        background-repeat: no-repeat;
-        background-attachment: fixed;
-        background-position: center;
-        background-size: cover;
-    }
-</style>
 <section>
+    <style>
+        .bghandler{
+            background: url("{{ asset('images/background-images/jackpots.jpg') }}");
+            min-height:100vh;
+            max-height:100vh;
+            min-width:100vw;
+            max-width:100vw;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            background-position: center;
+            background-size: cover;
+        }
+    </style>
     <div class="text-effect mt-4">
         <span>{{ $jackpotTitle }}</span>
     </div> 

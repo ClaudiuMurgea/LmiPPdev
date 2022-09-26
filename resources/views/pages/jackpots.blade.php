@@ -1,18 +1,17 @@
-<style>
-    .bghandler{
-        background: url("{{ asset('/header-images/bg3.jpg') }}");
-        min-height:100vh;
-        max-height:100vh;
-        min-width:100vw;
-        max-width:100vw;
-        background-repeat: no-repeat;
-        background-attachment: fixed;
-        background-position: center;
-        background-size: cover;
-    }
-</style>
 <div id="jackpots_page" class="max_width mt-2">
-
+    <style>
+        .bghandler{
+            background: url("{{ asset('images/background-images/jackpots.jpg') }}");
+            min-height:100vh;
+            max-height:100vh;
+            min-width:100vw;
+            max-width:100vw;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            background-position: center;
+            background-size: cover;
+        }
+    </style>
     @if($showSystemJackpots == "Yes" && count($getInternalJackpots))
         <div class="text-effect mt-3">
             <span>{{Translate('System Jackpots')}}</span>
@@ -49,7 +48,7 @@
 
     @if($showExternalJackpots == "Yes" && count($getExternalJackpots))
         <div class="text-effect mt-3">
-            <span>{{Translate('External Jackpots')}}</span>
+            <span>{{Translate('System Jackpots')}}</span>
         </div> 
         <div class="position-relative d-flex justify-content-center">
             <div class="custom-shape-divider-top-1662723266">

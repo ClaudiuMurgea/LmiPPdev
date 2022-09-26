@@ -1,17 +1,17 @@
-<style>
-    .bghandler{
-        background: url("{{ asset('/header-images/bg4.jpg') }}");
-        min-height:100vh;
-        max-height:100vh;
-        min-width:100vw;
-        max-width:100vw;
-        background-repeat: no-repeat;
-        background-attachment: fixed;
-        background-position: center;
-        background-size: cover;
-    }
-</style>
 <div id="cashouts_page" class="full_width">
+    <style>
+        .bghandler{
+            background: url("{{ asset('images/background-images/cashouts.jpg') }}");
+            min-height:100vh;
+            max-height:100vh;
+            min-width:100vw;
+            max-width:100vw;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            background-position: center;
+            background-size: cover;
+        }
+    </style>
     <table class="table custom_table_background max_width text-white bolder radius_10 cashout_page mt_2 no_border_b">
         <thead>
             <tr>                                                   

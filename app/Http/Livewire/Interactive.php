@@ -22,7 +22,6 @@ class Interactive extends Component
     public $showJackpot             = false;
     public $jackpotValue;
     public $jackpotTitle;
-
     public function render()
     {
         // $time = now()->toDateTimeString();
@@ -43,15 +42,15 @@ class Interactive extends Component
             $this->getExternalJackpots = DB::connection('mysql_main')->select("call LmiPP.GetSystemJackpotsNames");
             $this->getInternalJackpots = DB::connection('mysql_main')->select("call LmiPP.GetExternalJackpotsNames");
         }
+
+        $getPID = DB::connection('mysql_main')->select("select LmiPP.MAC2PID('".$mac."') PID");
+        $activePID = $getPID[0]->PID;
+
+        if($activePID!="0") 
+        {
+            redirect("/");
+        }
         return view('livewire.interactive', ['cashoutValues' => $cashoutValues]);
-    }
-    public function goTo($page)
-    {
-        return redirect("/$page");
-    }
-    public function wannabe()
-    {
-        $this->isLoading = false;
     }
     public function showThis($page) 
     {
