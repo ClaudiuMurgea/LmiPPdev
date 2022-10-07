@@ -78,21 +78,8 @@
             @endforeach
         @endif
     </div>  
+
+    <div class="padding_bottom">
+    </div>
+
 </div> 
-<div class="arrow">
-    <span></span>
-    <span></span>
-    <span></span>
-</div>
-
-<div class="padding_bottom">
-</div>
-
-<script>
-    var jackpots = document.getElementsByClassName('jackpots_grid')[0];
-    var screenHeight = window.innerHeight;
-    if (jackpots.scrollHeight > screenHeight) { 
-        document.querySelector("div.arrow").style.display = "block"; 
-        document.querySelector("div#jackpots_page").classList.add("plifscroll");
-    } 
-</script>

@@ -85,27 +85,28 @@
             @endswitch
         @endforeach
     </section>
+    <div class="padding_bottom">
+    </div>
+
+    <script>
+        $('#Romania').click(function() {  
+            $("#personalSlide").text("{{Translate('Personal Jackpot','Ro')}}");
+            $("#rankingSlide").text("{{Translate('Account Level','Ro')}}");
+            $("#jackpotsSlide").text("{{Translate('Jackpots','Ro')}}");
+            $("#bonusSlide").text("{{Translate('Bonus','Ro')}}");
+            $("#cashoutsSlide").text("{{Translate('Cashouts','Ro')}}");
+            $("#settingsSlide").text("{{Translate('Settings','Ro')}}");
+        });
+
+        $('#England').click(function() {  
+            $("#personalSlide").text("{{Translate('Personal Jackpot','En')}}");
+            $("#rankingSlide").text("{{Translate('Account Level','En')}}");
+            $("#jackpotsSlide").text("{{Translate('Jackpots','En')}}");
+            $("#bonusSlide").text("{{Translate('Bonus','En')}}");
+            $("#cashoutsSlide").text("{{Translate('Cashouts','En')}}");
+            $("#settingsSlide").text("{{Translate('Settings','En')}}");
+        });
+    </script>
 </section>
 
-<div class="padding_bottom">
-</div>
 
-<script>
-    $('#Romania').click(function() {  
-        $("#personalSlide").text("{{Translate('Personal Jackpot','Ro')}}");
-        $("#rankingSlide").text("{{Translate('Account Level','Ro')}}");
-        $("#jackpotsSlide").text("{{Translate('Jackpots','Ro')}}");
-        $("#bonusSlide").text("{{Translate('Bonus','Ro')}}");
-        $("#cashoutsSlide").text("{{Translate('Cashouts','Ro')}}");
-        $("#settingsSlide").text("{{Translate('Settings','Ro')}}");
-    });
-
-    $('#England').click(function() {  
-        $("#personalSlide").text("{{Translate('Personal Jackpot','En')}}");
-        $("#rankingSlide").text("{{Translate('Account Level','En')}}");
-        $("#jackpotsSlide").text("{{Translate('Jackpots','En')}}");
-        $("#bonusSlide").text("{{Translate('Bonus','En')}}");
-        $("#cashoutsSlide").text("{{Translate('Cashouts','En')}}");
-        $("#settingsSlide").text("{{Translate('Settings','En')}}");
-    });
-</script>

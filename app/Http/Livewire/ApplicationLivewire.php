@@ -3,60 +3,58 @@
 namespace App\Http\Livewire;
 
 use Livewire\Component;
-use App\Actions\MyAction;
 use App\Models\MainSetting;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\CardColorBackground;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Config;
 use App\Models\MasterOnlyPlayerSetting;
+use Illuminate\Support\Facades\Cookie;
 use Illuminate\Database\Eloquent\Collection;
-
 class ApplicationLivewire extends Component
 {
-    public $slideCount;
     // Settings
+    public $slideCount;
+    public $availablePages;
     public $showSystemJackpots;  
     public $showExternalJackpots;
-    public $availablePages;
 
     // Application Initialization
     public $mac;
-    public $MasterIP;
-    public $DeviceID;
     public $pid;
+    public $title;
     public $page;
     public $oldPage;
-    public $title;
-
     public $isThisPageDefault;
+    public $MasterIP;
+    public $DeviceID;
     public $langStatus;
     public $slideStatus;
     public $cardBackgrounds;
 
     // Component / BackButton / 
     public $showComponent;
-    public $showBack    = false;
     public $slideActive = true;
+    public $showBack    = false;
+
     /*========================*|
     ||  Header Values
     ||========================*/
     public $userName;
     public $userPoints;
-    public $userCardColor;
     public $CardColorInt;
+    public $userCardColor;
 
     /*========================*|
     ||  All pages
     ||========================*/
-    public $Jackpots        = false;
-    public $PersonalJackpot = false;
-    public $AccountLevel    = false;
     public $Bonus           = false;
     public $Cashouts        = false;
     public $Settings        = false;
+    public $Jackpots        = false;
     public $ShowJackpot     = false;
+    public $AccountLevel    = false;
+    public $PersonalJackpot = false;
 
     /*========================*|
     ||  Jackpots
@@ -69,33 +67,59 @@ class ApplicationLivewire extends Component
     /*========================*|
     ||  Bonus
     ||========================*/
-    public $BonusShowCurrentBenefit;
-    public $monthCollectedPoints;
-    public $monthRedeemedPoints;
     public $totalPoints;
-    public $dayCollectedPoints;
     public $dayRedeemedPoints;
+    public $dayCollectedPoints;
+    public $monthRedeemedPoints;
+    public $monthCollectedPoints;
+    public $BonusShowCurrentBenefit;
 
     /*========================*| 
     ||  Cashouts
     ||========================*/
+    public $oldId;
+    public $oldName;
     public $cashoutValues;
     public $showReturn = false;
-    public $oldName;
-    public $oldId;
-
     public function boot()
     {
-        //dd(\Session::get('Mapare'));
+        // $mac="00:2e:15:00:14:82"; //premier 122
+        // $mac="00:1b:eb:91:a9:3d"; //fructa 108
+        // pt .38 macul -> 00:1b:eb:91:85:72 PlayerCardID 1560248085 sau 0
+
         \Session::forget('Mapare');
         $this->MasterIp = DB::connection('mysql_main')->select("SELECT LmiPP.GetMasterIP() MasterIP")[0]->MasterIP;
         config(['database.connections.mysql_master.host' => $this->MasterIp]);
     }
     public function mount()
     {   
-        // $mac="00:2e:15:00:14:82"; //premier 122
-        // $mac="00:1b:eb:91:a9:3d"; //fructa 108
-        $this->mac="00:2e:15:00:14:82";
+        // Getting the MAC from the URL (Vital action when the LMI APP is opened)
+        if(isset($_GET["MAC"]))
+        {
+            $this->mac = $_GET["MAC"];
+        } else {
+        // If the MAC is not recieved from the URL, the whole application is closed and a custom error is displayed
+            dump('                                            MAC is incorrect                                            ');
+            abort(404);
+        }
+
+        // Saving the mac inside a cookie if the cookie is not set (The cookie is used inside 'app/Http/Controllers/PidController.php')
+        if(!Cookie::get('LmiMacNew')){
+            Cookie::queue('LmiMacNew', $this->mac, 2147483647);
+        }
+
+        // DeviceID is used for Cashouts page
+        $getDeviceID =  DB::connection('mysql_main')->select("SELECT DeviceID FROM lmi.devices_last WHERE MAC='$this->mac'");
+        $this->DeviceID = $getDeviceID[0]->DeviceID;
+
+        // use MAC to get PID (if it fails, the error is contained)
+        try {
+            $getPID = DB::connection('mysql_main')->select("select LmiPP.MAC2PID('".$this->mac."') PID");
+                $this->pid = $getPID[0]->PID;
+        } catch (\Illuminate\Database\QueryException $e) {
+            return $e->getMessage();
+        }
+       
         // Example for caching 
         // if(! Cache::get('settings'))
         // {
@@ -105,13 +129,11 @@ class ApplicationLivewire extends Component
 
         //     $this->appSettings = Cache::get('settings');
 
-        // use MAC to get PID
-        $getPID = DB::connection('mysql_main')->select("select LmiPP.MAC2PID('".$this->mac."') PID");
-            $this->pid = $getPID[0]->PID;
-        // use PID to get NAME
+        // use PID to get the user name (only two names will be displayed)
         $getName = DB::connection('mysql_main')->select("select lmi.GET_PLAYER_NAME('".$this->pid."') Name");
-            $this->userName = $getName[0]->Name;
-        // use PID to get CardColor
+            $this->userName = explode(" ",$getName[0]->Name);
+
+        // use PID to get CardColor (The card name that is displayed in the header next to points)
         $CardColor = DB::connection('mysql_main')->select("select lmi.GetPlayerMaxCard('".$this->pid."') CardColor");
             $this->userCardColor = $CardColor[0]->CardColor;
 
@@ -121,57 +143,58 @@ class ApplicationLivewire extends Component
 
             $this->cardBackgrounds = CardColorBackground::find($this->CardColorInt);
 
-        // Application Default Settings Logic 
-        $appSettings    = MainSetting::on('mysql_main')->first();
-        $defaultPage    = $appSettings->DefaultLandingPage;
+        // Application default settings logic 
+        // MainSetting             || is the model that retrieves data related to the application default settings.
+        // MasterOnlyPlayerSetting || is the model that retrieves data related to the user custom settings.
+        // In absence of user custom settings, the application default settings will be used. 
+        // if the user has custom settings recorded based on the user ID in the database, the settings are overwritten.
+        $appSettings         = MainSetting::on('mysql_main')->first();
+        $defaultPage         = $appSettings->DefaultLandingPage;
+        $defaultLanguage     = $appSettings->DefaultLanguage;
+        $idleLanguage        = $appSettings->DefaultLanguage;
 
-        $defaultLanguage = $appSettings->DefaultLanguage;
-        $idleLanguage    = $appSettings->DefaultLanguage;
-        $playerSettings = MasterOnlyPlayerSetting::on('mysql_master')->find($this->pid);
+        //Checking if the user has custom settings in the database
+        $playerSettings      = MasterOnlyPlayerSetting::on('mysql_master')->find($this->pid);
         if($playerSettings)
         {
+            // Overwriting the settings
             $defaultPage     = $playerSettings->LandingPage;
             $defaultLanguage = $playerSettings->CustomLanguage;
         }
-        if(\Session::get('lang')) {
+        
+        // Saving the user (if exists) or app language settings.
+        if(\Session::get('lang') == null) {
             \Session::forget('lang');
         } else {
             \Session::put('lang', $defaultLanguage);
         }
-
-        if(\Session::get('idleLang')) {
+        // Saving app language settings only for idle page (the user doesn't decide the language on idle).
+        if(\Session::get('idleLang') == null) {
             \Session::forget('idleLang');
         } else {
             \Session::put('idleLang', $idleLanguage);
         }
-
         $this->langStatus               = $defaultLanguage;
+        $this->slideStatus              = $defaultPage;
 
         //Default Page data to be set (includeVar/title/page/selected)
         $this->$defaultPage = true;
         $this->title                    = $defaultPage;
         $camelDefaultPage               = str_replace(' ', '', $defaultPage);
-        $this->$camelDefaultPage        = true;
         $this->page                     = $camelDefaultPage;
         $this->oldPage                  = $camelDefaultPage;
         $this->isThisPageDefault        = $camelDefaultPage;
-        $this->slideStatus              = $defaultPage;
 
-        $this->showSystemJackpots       =  $appSettings->ShowSystemJackpots;  
-        $this->showExternalJackpots     =  $appSettings->ShowExternalJackpots;
-        $availablePages                 =  $appSettings->AvailablePages;
-        $this->availablePages           =  explode(",", $availablePages);
+        $this->showSystemJackpots       = $appSettings->ShowSystemJackpots;  
+        $this->showExternalJackpots     = $appSettings->ShowExternalJackpots;
+        $availablePages                 = $appSettings->AvailablePages;
+        $this->availablePages           = explode(",", $availablePages);
         $this->slideCount               = count($this->availablePages);
         $this->BonusShowCurrentBenefit  = $appSettings->BonusShowCurrentBenefit;
-            
-        // $this->func(new MyAction());
-    }
-    public function func(MyAction $param2)  {
-        //This is a action that might be usefull in later stages of development
-        dump($param2->handle(1));
     }
     public function render()
     {
+        //ShowJackpot page persists even if the application keeps refreshing, saving the disired jackpot that the user clicked on as OldName or oldId
         if($this->oldId == null) {
             //logica pt external
             $this->jackpotValue = DB::connection('mysql_main')->select("call LmiPP.GetExternalJackpotsValues('$this->oldName', '10')");
@@ -180,43 +203,50 @@ class ApplicationLivewire extends Component
             $this->jackpotValue = DB::connection('mysql_main')->select("call LmiPP.GetSystemJackpotsValues('$this->oldId', '10')");
         }
 
-        $getPoints = DB::connection('mysql_master')->select("select lmi.GetMasterOnlyB1Points('".$this->pid."') Points");
+        // Fetching user points from the master server
+        $getPoints        = DB::connection('mysql_master')->select("select lmi.GetMasterOnlyB1Points('".$this->pid."') Points");
         $this->userPoints = $getPoints[0]->Points;
+        $this->userPoints = number_format(intval($this->userPoints), 0, ',', '.');
 
+        // If the user is on Cashouts page, query the database for the $cashoutValues
         if($this->page == 'Cashouts') 
         {
-            $getDeviceID =  DB::connection('mysql_main')->select("SELECT DeviceID FROM lmi.devices_last WHERE MAC='$this->mac'");
-                $this->DeviceID= $getDeviceID[0]->DeviceID;
-
-            $getCashouts= DB::connection('mysql_main')->select("SELECT Slot,FORMAT((Value/100),2) Value,Timestamp FROM lmi.Handpays WHERE DeviceID=$this->DeviceID ORDER BY `Timestamp` DESC LIMIT 10");
-                $this->cashoutValues = $getCashouts;
+            // $getCashouts = DB::connection('mysql_main')->select("SELECT Slot,FORMAT((Value/100),2) Value,Timestamp FROM lmi.Handpays WHERE DeviceID=$this->DeviceID ORDER BY `Timestamp` DESC LIMIT 8");
+            //     $this->cashoutValues = $getCashouts;
+            $getSlot = DB::connection('mysql_main')->select("select lmi.Device2Slot('".$this->DeviceID."') Slot");
+            $slot = $getSlot[0]->Slot;
+            $this->cashoutValues = DB::connection('mysql_main')->select("call lmi.GetHandpaysAndTito('$slot', '9')");
         }
+
+        // If the user is on Jackpots page, query the database for system and external jackpots
         if($this->page == 'Jackpots') 
         {
             $this->getExternalJackpots = DB::connection('mysql_main')->select("call LmiPP.GetSystemJackpotsNames");
             $this->getInternalJackpots = DB::connection('mysql_main')->select("call LmiPP.GetExternalJackpotsNames");
         }
+        // If the user is on Bonus page, query the database
         if($this->page == 'Bonus')
         {
-            $currentBenefit = 'b'.$this->BonusShowCurrentBenefit;
-            $getTotalPoints = DB::connection('mysql_master')->select("call LmiPP.MasterOnlyGetPlayerBenefits('$this->pid')");
-            $this->totalPoints = $getTotalPoints[0]->$currentBenefit;
+            $currentBenefit                 = 'b'.$this->BonusShowCurrentBenefit;
+            $getTotalPoints                 = DB::connection('mysql_master')->select("call LmiPP.MasterOnlyGetPlayerBenefits('$this->pid')");
+                $this->totalPoints          = $getTotalPoints[0]->$currentBenefit;
 
-            $getDailyPoints = DB::connection('mysql_main')->select("call LmiPP.GetPlayerDailyBenefits('$this->pid')");
-            $this->dayCollectedPoints = $getDailyPoints[0]->CD;
-            $this->dayRedeemedPoints = $getDailyPoints[0]->RD;
+            $getDailyPoints                 = DB::connection('mysql_main')->select("call LmiPP.GetPlayerDailyBenefits('$this->pid')");
+                $this->dayCollectedPoints   = $getDailyPoints[0]->CD;
+                $this->dayRedeemedPoints    = $getDailyPoints[0]->RD;
             
-            $getMonthlyPoints = DB::connection('mysql_main')->select("call LmiPP.GetPlayerMonthlyBenefits('$this->pid')");
-            $this->monthCollectedPoints = $getMonthlyPoints[0]->CM;
-            $this->monthRedeemedPoints  = $getMonthlyPoints[0]->RM;
+            $getMonthlyPoints               = DB::connection('mysql_main')->select("call LmiPP.GetPlayerMonthlyBenefits('$this->pid')");
+                $this->monthCollectedPoints = $getMonthlyPoints[0]->CM;
+                $this->monthRedeemedPoints  = $getMonthlyPoints[0]->RM;
         } 
-       
+
         return view('livewire.application-livewire');
     }
-    // Slide menu click action
+
+    // When the user clicks on one slide-menu icon, this function is triggered
     public function ShowComponent($data) 
     {
-        if($this->oldPage != $data) 
+        if($this->oldPage != $data)
         {
             $this->Jackpots         = false;
             $this->AccountLevel     = false;
@@ -230,7 +260,7 @@ class ApplicationLivewire extends Component
             $this->page     = $data;
             $this->oldPage  = $data;
     
-            // $titleFormat becomes from AccountLevel = Account Level, puts a space before capital letter (but not first letter)
+            // $titleFormat becomes from AccountLevel = Account Level, puts a space before a capital letter (but not first letter)
             $titleFormat = preg_replace('/([a-z])([A-Z])/s','$1 $2', $data);
             $this->title = $titleFormat;
         } else {
@@ -238,15 +268,15 @@ class ApplicationLivewire extends Component
         }
         $this->showBack = false;
     }
-    // Back button click action
+    // When the user clicks on one jackpot on the Jackpots page, the back button appears, that back button triggers this function
     public function back()
     {
         $this->ShowJackpot = false;
-        $this->showBack = false;
-        $this->Jackpots = true;
-        $this->page = 'Jackpots';
+        $this->showBack    = false;
+        $this->Jackpots    = true;
+        $this->page        = 'Jackpots';
     }
-    // Jackpots page click action to show individual ShowJackpot page
+    // When the user clicks on one jackpot on the Jackpots page, that click event triggers this function
     public function showJackpot($name, $id = null)
     {
         $this->Jackpots     = false;
@@ -270,12 +300,18 @@ class ApplicationLivewire extends Component
             $this->jackpotValue = DB::connection('mysql_main')->select("call LmiPP.GetSystemJackpotsValues('$id', '10')");
         }
     }
+    
+    //This function is triggered when the user clicks on the flag icons on Settings page. 
     public function languageStatus($status) 
     {
+        //Deletes previous session language variable and remakes it
         \Session::forget('lang');
         \Session::put('lang', $status);
-        $this->langStatus = $status;
 
+        // Highlights the flag that the user clicked on
+        $this->langStatus = \Session::get('lang');
+
+        //Updates if the user has custom settings in the database, or creates new settings for that user.
         $playerSettings = MasterOnlyPlayerSetting::on('mysql_master')->find($this->pid);
         if($playerSettings) {
             $playerSettings->CustomLanguage = $status;
@@ -287,12 +323,16 @@ class ApplicationLivewire extends Component
             $newPlayerSettings->LandingPage = '';
             $newPlayerSettings->CustomLanguage = $status;
             $newPlayerSettings->save();
-        };
+        }
     }
+
+    //This function is triggered when the user clicks on the slide-menu icons on Settings page. 
     public function slideStatus($status) 
     {
+        // Highlights the slide-menu icon that the user clicked on
         $this->slideStatus = $status;
 
+        //Updates if the user has custom settings in the database, or creates new settings for that user.
         $playerSettings = MasterOnlyPlayerSetting::on('mysql_master')->find($this->pid);
         if($playerSettings) {
             $playerSettings->LandingPage = $status;

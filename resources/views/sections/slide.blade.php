@@ -21,7 +21,8 @@
                     background-size: 600% 600%;
                     animation: gradient 200s linear infinite;
                     animation-direction: alternate;
-                    font-weight:600;font-size:1.1rem" class="MultiCarousel-inner"> 
+                    font-weight:600;font-size:1.1rem" class="MultiCarousel-inner">
+                    @if($availablePages)
                         @foreach($availablePages as $index => $page)
                             @switch(preg_replace("@\n@","",$page))
                                 @case('Jackpots')
@@ -69,6 +70,7 @@
                                 @default
                             @endswitch
                         @endforeach
+                    @endif
                     </div>
                     <img style="max-height:75px; max-width:60px;" class="leftLst"   src='images/slide-images/left.png'>
                     <img style="max-height:75px; max-width:60px;" class="rightLst"  src='images/slide-images/right.png'>
@@ -136,7 +138,7 @@
 
         });
     }
-    //this function used to move the items
+    //This function used to move the items
     function ResCarousel(e, el, s) {
         var leftBtn = ('.leftLst');
         var rightBtn = ('.rightLst');

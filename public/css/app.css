@@ -107,7 +107,7 @@ ul.pre-loader li {
     list-style: none;
     color: #ff6c00;
     display: inline;
-    font-size: 1.3rem;
+    font-size: 1.2rem;
     animation: pre-load 3s linear infinite;
 }
 ul li:nth-child(1) {
@@ -139,6 +139,12 @@ ul.pre-loader li:nth-child(9) {
 }
 ul.pre-loader li:nth-child(10) {
     animation-delay: 1.1s;
+}
+ul.pre-loader li:nth-child(11) {
+    animation-delay: 1.2s;
+}
+ul.pre-loader li:nth-child(12) {
+    animation-delay: 1.3s;
 }
 /*================================================================================================*| 
 ||  The class "text-effect" is used as title for "System/External Jackpots" on Jackpots Page
@@ -440,6 +446,9 @@ div.slide_trigger2 p {
 .pt_0-5 {
     padding-top: 0.5rem;
 }
+.pl_0-8 {
+    padding-left: 8px !important;
+}
 .pl_1-5 {
     padding-left:1.5rem;
 }
@@ -665,19 +674,19 @@ h2{
 .landing_page-img {
     min-height:80px !important; 
     min-width:80px !important; 
-    opacity:0.5; 
+    opacity:0.3; 
     margin-bottom:0;
 }
 .language-img {
     min-height:55px !important; 
     min-width:55px !important; 
-    opacity:0.5; 
+    opacity:0.3; 
     margin-top:0.5rem;
 }
 /*================================================================================================*| 
-||  Loading animation
+||  Welcome page identifier
 ||================================================================================================*/
-#loading{
+#welcome {
     position:relative;
     position:fixed;
     text-align:center;
@@ -695,7 +704,7 @@ h2{
     visibility: visible;
     z-index:10000;
 }
-#loading .hidden{
+#welcome .hidden{
     opacity: 0;
     visibility: hidden;
 }

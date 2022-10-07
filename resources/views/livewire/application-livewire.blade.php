@@ -1,8 +1,10 @@
-<div >
+<div>
     @include('utility.language')
     @include('sections.header')
+
     <!-- Pages Includes -->
     <div class="custom_title">{{ Translate($title) }}</div>
+
     <img class="bg_wrapper" src="data:image/png;base64,{{ chunk_split(base64_encode($cardBackgrounds->BackgroundImage)) }}" alt="image" width="100" />
 
     <div class="d-flex flex-column overflow app_wrapper custom_scrollbar">
@@ -18,7 +20,11 @@
         </div>
     </div>
     @include('sections.slide')  
-    <script>
+    <script type="text/javascript">
+        let lmiMac = <?php echo "'$mac'"; ?>;
+
+        let lmiDevice = <?php echo json_encode($DeviceID) ?>;
+        
         setInterval(() => {
             $.ajax({
                     headers: {
@@ -31,9 +37,9 @@
                     contentType: false,
                     processData: false,
                     success : function(data){
-                        if(data.success=="0")
+                        if(data.success < 1)
                         {
-                            window.location.href = "idle";
+                            window.location.href = "idle?MAC=" + lmiMac;
                         }
                     },
                 });

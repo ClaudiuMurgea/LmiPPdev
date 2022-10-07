@@ -1,8 +1,9 @@
 <div>
   <link rel="stylesheet" type="text/css" href="{{ asset('css/idle.css') }}">
 
-  <div style="display:none;" wire:poll.5000ms.keep-alive>
-      &nbsp;
+  <!-- This div with wire:poll is forcing the Livewire Component refresh every 5 seconds -->
+  <div class="d-none" wire:poll.5000ms.keep-alive>
+      PID : {{ $activePID }}
   </div>
 
   <div style="width:100vw; height:100vh;z-index:10000;position:relative;" wire:click="showIdlePages()">

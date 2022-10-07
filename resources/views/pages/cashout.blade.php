@@ -15,35 +15,26 @@
     <table class="table custom_table_background max_width text-white bolder radius_10 cashout_page mt_2 no_border_b">
         <thead>
             <tr>                                                   
-                <th class="cashouts_slot-wrapper text-left" scope="col">            {{ Translate('Slot') }}         </th>
+                <th class="cashouts_slot-wrapper text-left"  scope="col">           {{ Translate('Slot') }}         </th>
+                <th class="cashouts_slot-wrapper pl_0-8"     scope="col">           {{ Translate('Type') }}         </th>
                 <th class="cashouts_value-wrapper text-left" scope="col">           {{ Translate('Value') }}        </th>
-                <th style="padding-left:10px;" scope="col">                         {{ Translate('Timestamp') }}    </th>
+                <th style="padding-left:10px;"               scope="col">           {{ Translate('Timestamp') }}    </th>
             </tr>
         </thead>
         <tbody>
-            @foreach($cashoutValues as $index => $cashout)
-                <tr>
-                    <td class="@if($loop->last) no_border_b @endif text-left pl_2"> {{ $cashout->Slot }}            </td>
-                    <td class="@if($loop->last) no_border_b @endif text-left" >     {{ $cashout->Value }}           </td>
-                    <td class="@if($loop->last) no_border_b @endif">                {{ $cashout->Timestamp }}       </td>
-                </tr>
-            @endforeach
+            @if(!count($cashoutValues))
+                <td class="no_border_b text-left text-center" colspan='3'> {{ Translate('This slot machine does not have cashouts!') }}    </td>
+            @else
+                @foreach($cashoutValues as $index => $cashout)
+                    <tr>
+                        <td class="@if($loop->last) no_border_b @endif text-left pl_2"> {{ $cashout->Slot }}            </td>
+                        <td class="@if($loop->last) no_border_b @endif text-left">      {{ $cashout->CashoutType }}     </td>
+                        <td class="@if($loop->last) no_border_b @endif text-left" >     {{ $cashout->Amount }}          </td>
+                        <td class="@if($loop->last) no_border_b @endif">                {{ $cashout->Timestamp }}       </td>
+                    </tr>
+                @endforeach
+            @endif
         </tbody>
     </table>
 </div>
-<div class="arrow">
-    <span></span>
-    <span></span>
-    <span></span>
-</div>
-<div class="padding_bottom">
-</div>
 
-<script>
-    var cashoutpage = document.getElementsByClassName('cashout_page')[0];
-    var screenHeight = window.innerHeight;
-    if (cashoutpage.scrollHeight > screenHeight) { 
-        document.querySelector("div.arrow").style.display = "block"; 
-        // document.querySelector("div#cashouts_page").classList.add("plifscroll");
-    } 
-</script>

@@ -1,6 +1,6 @@
 <section>
     <style>
-        .bghandler{
+        .bghandler {
             background: url("{{ asset('images/background-images/jackpots.jpg') }}");
             min-height:100vh;
             max-height:100vh;
@@ -45,22 +45,10 @@
                     <td style="border:none;border-bottom:3px solid transparent;border-top:3px solid transparent;text-align:left;">                  {{ $value->Timestamp }} </td>
                 </tr>
             @endforeach
-        <!-- style="border-top: 2px solid #fbb117" -->
         </tbody>
     </table>
+    
+    <div class="padding_bottom">
+    </div>
+
 </section>
-<div class="arrow">
-    <span></span>
-    <span></span>
-    <span></span>
-</div>
-<div class="padding_bottom">
-</div>
-<script>
-    var showjackpot = document.getElementsByTagName('section')[0];
-    var screenHeight = window.innerHeight;
-    if (showjackpot.scrollHeight > screenHeight) { 
-        document.querySelector("div.arrow").style.display = "block"; 
-        document.querySelector("section").classList.add("plifscroll");
-    } 
-</script>

@@ -4,6 +4,8 @@ use Illuminate\Support\Str;
 
 return [
 
+    // My smart global variable
+    'mac'  => '',
     /*
     |--------------------------------------------------------------------------
     | Default Database Connection Name
@@ -43,7 +45,6 @@ return [
             'foreign_key_constraints' => env('DB_FOREIGN_KEYS', true),
         ],
 
-
         'mysql_master' => [
             'driver' => 'mysql',
             'url' => env('DATABASE_URL'),
@@ -63,25 +64,6 @@ return [
                 PDO::MYSQL_ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),
             ]) : [],
         ],
-        // 'mysql_master' => [
-        //     'driver' => 'mysql',
-        //     'url' => env('DATABASE_URL'),
-        //     'host' => env('DB_HOST_M', '127.0.0.1'),
-        //     'port' => env('DB_PORT_M', '3306'),
-        //     'database' => env('DB_DATABASE_M', 'forge'),
-        //     'username' => env('DB_USERNAME_M', 'forge'),
-        //     'password' => env('DB_PASSWORD_M', ''),
-        //     'unix_socket' => env('DB_SOCKET', ''),
-        //     'charset' => 'latin1',
-        //     'collation' => 'latin1_swedish_ci',
-        //     'prefix' => '',
-        //     'prefix_indexes' => true,
-        //     'strict' => false,
-        //     'engine' => null,
-        //     'options' => extension_loaded('pdo_mysql') ? array_filter([
-        //         PDO::MYSQL_ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),
-        //     ]) : [],
-        // ],
 
         'mysql_main' => [
             'driver' => 'mysql',

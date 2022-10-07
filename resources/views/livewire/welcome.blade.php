@@ -1,4 +1,4 @@
-<div id="loading">
+<div id="welcome">
     <style>
         #text3d {
         color: #fff;

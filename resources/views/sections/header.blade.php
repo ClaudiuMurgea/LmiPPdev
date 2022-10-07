@@ -5,7 +5,10 @@
         </div>
         <div class='full_width d-flex justify-content-center align-items-center'>
             <img src='images/header-images/user.png' class='header-img_bigger mx_8'>
-            <h4 style="line-height:1.25;padding-right:34px;" class="dark_text header_info">{{ $userName }}</h4>
+            <h4 style="line-height:1.25;padding-right:34px;" class="dark_text header_info">
+                @if(isset($userName[0])) {{ $userName[0] }} @endif 
+                @if(isset($userName[1])) {{ $userName[1] }} @endif 
+            </h4>
         </div>
         <div style="position:absolute; top:6px; right:16px;" class="d-flex justify-content-end">
             <div class='d-flex align-items-center'>
@@ -17,9 +20,9 @@
                 <div style="position:relative;overflow:hidden;width:auto;">
                         <ul class="pre-loader">
                         <!-- <span>{{ number_format(intval($userPoints), 0, ',', '.') }}</span> -->
-                        <?php $chars = str_split($userPoints); ?>
-                            @foreach($chars as $char)
-                                <li>{{ $char }}</li>
+                        <?php  $characters = str_split($userPoints); ?>
+                            @foreach($characters as $character)
+                                <li>{{ $character }}</li>
                             @endforeach
                         </ul>
                 </div>

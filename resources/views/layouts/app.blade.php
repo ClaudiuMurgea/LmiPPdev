@@ -2,7 +2,8 @@
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
     <head>
         <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+        <meta name="viewport" content="width=device-width, maximum-scale=1.0, user-scalable=0" />
+        <meta name="HandheldFriendly" content="false" />
         <meta name="csrf-token" content="{{ csrf_token() }}">
         <title>LmiPP</title>
         <link rel="icon" href="{{ asset('header-images/pyramid.png') }}">
@@ -11,7 +12,7 @@
         <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script> -->
         <!-- Icons for Chevron -->
         <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" type="text/css" /> -->
-        <link rel="stylesheet" type="text/css" href="{{ asset('css/custom.css')         }}">
+        <link rel="stylesheet" type="text/css" href="{{ asset('css/app.css')            }}">
         <link rel="stylesheet" type="text/css" href="{{ asset('css/carousel.css')       }}">
         <link rel="stylesheet" type="text/css" href="{{ asset('css/keyboard.css')       }}">
         <link rel="stylesheet" type="text/css" href="{{ asset('css/loading.css')        }}">
@@ -28,13 +29,12 @@
     </head>
     <body style="overflow:hidden;">
         @livewire('welcome')
-
         {{ $slot }}
         @livewireScripts
         <script>
             $( document ).ready(function() {
                 setTimeout(function() {
-                    $('#loading').addClass('hidden');
+                    $('#welcome').addClass('hidden');
                 }, 5000);
             });
         </script>
