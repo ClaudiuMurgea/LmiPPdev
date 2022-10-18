@@ -13,8 +13,8 @@
         }
     </style>
     @if($showSystemJackpots == "Yes" && count($getInternalJackpots))
-        <div class="text-effect mt-3">
-            <span>{{Translate('System Jackpots')}}</span>
+        <div class="text-effect mt-2">
+            <span>{{Translate('External Jackpots')}}</span>
         </div> 
         <div class="position-relative d-flex justify-content-center">
             <div class="custom-shape-divider-top-1662723266">
@@ -24,7 +24,6 @@
             </div>
         </div>
     @endif
-
     <div class="jackpots_grid ">
         @if($showSystemJackpots == "Yes")
             @foreach($getInternalJackpots as $index => $internalJackpots)
@@ -37,7 +36,7 @@
                             <span style=" background-image: linear-gradient(#fede9a 48%, #b07e29 47.9%,  #fede9a 100%);
                                         -webkit-background-clip: text;
                                         -webkit-text-fill-color: transparent;font-weight:900 !important;">
-                                    <strong class="superbold">{{ucfirst($internalJackpots->Name)}}</strong>  
+                                    <strong class="superbold px-1 font_size-1-4"  style="display:inline-block;white-space: nowrap;overflow:hidden;width:100%;max-width:150px;min-width:190px !important;">{{ucfirst(Str::limit($internalJackpots->Name, 10))}}&nbsp;&nbsp;</strong>  
                             </span> 
                         </span>
                     </a>
@@ -69,8 +68,8 @@
                                     background-size: 400% 400%;"> 
                             <span style=" background-image: linear-gradient(#fede9a 48%, #b07e29 47.9%,  #fede9a 100%);
                                         -webkit-background-clip: text;
-                                        -webkit-text-fill-color: transparent;font-weight:900 !important;">
-                                    <strong class="superbold">{{ucfirst($externalJackpots->Name)}}</strong>  
+                                        -webkit-text-fill-color: transparent;font-weight:900 !important;width:100%;">
+                                    <strong class="superbold px-1 font_size-1-4" style="display:inline-block;white-space: nowrap;overflow:hidden;width:100%;max-width:150px;min-width:190px !important;">{{ucfirst(Str::limit($externalJackpots->Name, 10))}}</strong>  
                             </span> 
                         </span>
                     </a>

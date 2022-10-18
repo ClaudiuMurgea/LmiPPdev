@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire;
 
+use App\Models\MainSetting;
 use Livewire\Component;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Cookie;
@@ -31,6 +32,11 @@ class Interactive extends Component
         if(!Cookie::get('LmiMacNew')){
             Cookie::queue('LmiMacNew', $this->mac, 2147483647);
         }
+
+        $appSettings        = MainSetting::on('mysql_main')->first();
+        $defaultLanguage    = $appSettings->DefaultLanguage;
+        \Session::forget('lang');
+        \Session::put('lang', $defaultLanguage);
     }
     public function render()
     {
@@ -41,11 +47,12 @@ class Interactive extends Component
             try {
                 $getDeviceID =  DB::connection('mysql_main')->select("SELECT DeviceID FROM lmi.devices_last WHERE MAC='$this->mac'");
                 $DeviceID = $getDeviceID[0]->DeviceID;
+
             } catch (\Illuminate\Database\QueryException $e) {
                 return $e->getMessage();
             }
-            $getCashouts= DB::connection('mysql_main')->select("SELECT Slot,FORMAT((Value/100),2) Value,Timestamp FROM lmi.Handpays WHERE DeviceID=$DeviceID ORDER BY `Timestamp` DESC LIMIT 10");
-                $cashoutValues = $getCashouts;
+
+            $cashoutValues= DB::connection('mysql_main')->select("call lmi.GetHandpaysAndTito('$this->mac', '9')");
         }
 
         // If the user is on Jackpots page, query the database for system and external jackpots

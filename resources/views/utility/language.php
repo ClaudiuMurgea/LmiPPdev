@@ -8,7 +8,6 @@
         }
         session(['Mapare' => $Mapare]);
     }
-
     function Translate($Text,$ForcedLang="")
     {
         $Lang=\Session::get('lang');

@@ -19,6 +19,8 @@ class ApplicationLivewire extends Component
     public $showSystemJackpots;  
     public $showExternalJackpots;
 
+    public $nameAnimation = false;
+
     // Application Initialization
     public $mac;
     public $pid;
@@ -84,7 +86,7 @@ class ApplicationLivewire extends Component
     public function boot()
     {
         // $mac="00:2e:15:00:14:82"; //premier 122
-        // $mac="00:1b:eb:91:a9:3d"; //fructa 108
+        // $mac="00:f4:ac:68:50:4e"; //fructa 108
         // pt .38 macul -> 00:1b:eb:91:85:72 PlayerCardID 1560248085 sau 0
 
         \Session::forget('Mapare');
@@ -132,7 +134,10 @@ class ApplicationLivewire extends Component
         // use PID to get the user name (only two names will be displayed)
         $getName = DB::connection('mysql_main')->select("select lmi.GET_PLAYER_NAME('".$this->pid."') Name");
             $this->userName = explode(" ",$getName[0]->Name);
-
+        if(strlen($getName[0]->Name) > 19)
+        {
+            $this->nameAnimation = true;
+        }
         // use PID to get CardColor (The card name that is displayed in the header next to points)
         $CardColor = DB::connection('mysql_main')->select("select lmi.GetPlayerMaxCard('".$this->pid."') CardColor");
             $this->userCardColor = $CardColor[0]->CardColor;
@@ -152,34 +157,48 @@ class ApplicationLivewire extends Component
         $defaultPage         = $appSettings->DefaultLandingPage;
         $defaultLanguage     = $appSettings->DefaultLanguage;
         $idleLanguage        = $appSettings->DefaultLanguage;
-
-        //Checking if the user has custom settings in the database
-        $playerSettings      = MasterOnlyPlayerSetting::on('mysql_master')->find($this->pid);
-        if($playerSettings)
-        {
-            // Overwriting the settings
-            $defaultPage     = $playerSettings->LandingPage;
-            $defaultLanguage = $playerSettings->CustomLanguage;
+        if($this->pid) {
+            //Checking if the user has custom settings in the database
+            $playerSettings      = MasterOnlyPlayerSetting::on('mysql_master')->find($this->pid);
+            if($playerSettings != null) {
+                // Overwriting the settings
+                if($playerSettings->LandingPage != "")
+                {
+                    $defaultPage     = $playerSettings->LandingPage;
+                }
+                if($playerSettings->CustomLanguage != "")
+                {
+                    $defaultLanguage = $playerSettings->CustomLanguage;
+                }
+            }
         }
-        
         // Saving the user (if exists) or app language settings.
         if(\Session::get('lang') == null) {
             \Session::forget('lang');
-        } else {
-            \Session::put('lang', $defaultLanguage);
-        }
+        } 
+        \Session::put('lang', $defaultLanguage);
+        
         // Saving app language settings only for idle page (the user doesn't decide the language on idle).
         if(\Session::get('idleLang') == null) {
             \Session::forget('idleLang');
-        } else {
-            \Session::put('idleLang', $idleLanguage);
-        }
+        } 
+        \Session::put('idleLang', $idleLanguage);
         $this->langStatus               = $defaultLanguage;
         $this->slideStatus              = $defaultPage;
 
         //Default Page data to be set (includeVar/title/page/selected)
-        $this->$defaultPage = true;
+        $trimmedString = str_replace(' ', '', $defaultPage);
+        $this->$trimmedString = true;
         $this->title                    = $defaultPage;
+
+        switch($defaultPage) {
+            case 'Personal Jackpot':
+                $this->title = 'Personal JP';
+                break;
+            case 'Account Level':
+                $this->title = 'Level';
+        }
+
         $camelDefaultPage               = str_replace(' ', '', $defaultPage);
         $this->page                     = $camelDefaultPage;
         $this->oldPage                  = $camelDefaultPage;
@@ -260,9 +279,17 @@ class ApplicationLivewire extends Component
             $this->page     = $data;
             $this->oldPage  = $data;
     
+
             // $titleFormat becomes from AccountLevel = Account Level, puts a space before a capital letter (but not first letter)
             $titleFormat = preg_replace('/([a-z])([A-Z])/s','$1 $2', $data);
             $this->title = $titleFormat;
+            switch($titleFormat) {
+                case 'Personal Jackpot':
+                    $this->title = 'Personal JP';
+                    break;
+                case 'Account Level':
+                    $this->title = 'Level';
+            }
         } else {
             $this->oldPage = $data;
         }

@@ -22,27 +22,27 @@
             </svg>
         </div>
     </div>
-    <table class="table1 text-center max_width font_size-1-2 mt_1-5">
+    <table class="table1 text-center max_width mt_1-5">
         <thead>
             <tr>
-                <th style="border-top-left-radius:16px;text-align:left;padding-left:4rem;" class="opacity_0-9 ">    {{ Translate('Slot')  }}        </th>
-                <th style="text-align:left;padding-left:1rem;" class="opacity_0-9">                                 {{ Translate('Value') }}        </th>
-                <th style="border-top-right-radius:16px;text-align:left;" class="opacity_0-9">                      {{ Translate('Timestamp')  }}   </th>
+                <th style="border-top-left-radius:16px;text-align:left;padding-left:5rem;" colspan="2" class="opacity_0-9 font_size-1-4"> {{ Translate('Slot')  }}        </th>
+                <th style="text-align:left;padding-left:1rem;"                             colspan="2" class="opacity_0-9 font_size-1-4"> {{ Translate('Value') }}        </th>
+                <th style="border-top-right-radius:16px;text-align:left;"                  colspan="3" class="opacity_0-9 font_size-1-4"> {{ Translate('Timestamp')  }}   </th>
             </tr>
         </thead>
-        <tbody >
+        <tbody>
             @if(!count($jackpotValue))
                 <tr>
-                    <td colspan="3" class="text-center">
-                    {{ Translate('This Jackpot has not been won yet!') }}
+                    <td colspan="7" class="text-center">
+                        {{ Translate('This Jackpot has not been won yet!') }}
                     </td>
                 </tr>
             @endif
             @foreach($jackpotValue as $value)
                 <tr @if($loop->last) style="box-shadow: 0 2px 6px -2px #000;" @endif class="opacity_0-9">
-                    <td style="border:none;border-bottom:3px solid transparent;border-top:3px solid transparent;text-align:left;padding-left:4rem;">{{ $value->Slot }}      </td>
-                    <td style="border:none;border-bottom:3px solid transparent;border-top:3px solid transparent;text-align:left;padding-left:1rem;">{{ $value->Value }}     </td>
-                    <td style="border:none;border-bottom:3px solid transparent;border-top:3px solid transparent;text-align:left;">                  {{ $value->Timestamp }} </td>
+                    <td style="border:none;border-bottom:3px solid transparent;border-top:3px solid transparent;text-align:left;padding-left:5rem;" colspan="2" class="font_size-1-4"> {{ $value->Slot }}      </td>
+                    <td style="border:none;border-bottom:3px solid transparent;border-top:3px solid transparent;text-align:left;padding-left:1rem;" colspan="2"   class="font_size-1-4"> {{ $value->Value }}     </td>
+                    <td style="border:none;border-bottom:3px solid transparent;border-top:3px solid transparent;text-align:left;"                   colspan="3"   class="font_size-1-4"> {{ $value->Timestamp }} </td>
                 </tr>
             @endforeach
         </tbody>

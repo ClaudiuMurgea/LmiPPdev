@@ -33,7 +33,6 @@
 .custom_btn2 {
     /* linear-gradient(0deg,  #f3ad37, #8f6621,#fede9a) */
     border: 2px solid #fede9a;
-    outline:1px solid #f3ad37;
     border-radius: 14px;
     box-sizing: border-box;
     color: linear-gradient(to bottom, #fede9a 20%, #8f6621 40%, #f3ad37 100%);
@@ -45,7 +44,7 @@
     padding: 0.2rem;
     position: relative;
     text-decoration: none;
-    min-width: 400px;
+    min-width: 200px;
 }
 .custom_btn2 span {
     width: 100%;

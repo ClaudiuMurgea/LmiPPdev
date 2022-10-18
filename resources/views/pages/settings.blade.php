@@ -33,7 +33,7 @@
                         <div class="text-center moveup">
                             <img src='images/slide-images/jackpot.png' class="landing_page-img header-img mx-1 @if($slideStatus == 'Jackpots') selected_wrapper @endif">
                         </div>
-                        <div class="text-center no_line_height settings_text mt_08">
+                        <div class="text-center no_line_height settings_text mt_05">
                             {{Translate('Jackpots')}}
                         </div>
                     </div>
@@ -43,7 +43,7 @@
                         <div class="text-center moveup">
                             <img src='images/slide-images/personal.png' class="ml_13 landing_page-img header-img mx-1 @if($slideStatus == 'Personal Jackpot') selected_wrapper @endif">
                         </div>
-                        <div class="text-center no_line_height settings_text mt_08">
+                        <div class="text-center no_line_height settings_text mt_05">
                             {{Translate('Personal Jackpot')}}
                         </div>
                     </div>
@@ -54,7 +54,7 @@
                         <div class="text-center moveup">
                             <img src='images/slide-images/bonus.png' class="landing_page-img header-img mx-1 @if($slideStatus == 'Bonus') selected_wrapper @endif">
                         </div>
-                        <div class="text-center no_line_height settings_text mt_08">
+                        <div class="text-center no_line_height settings_text mt_05">
                             {{Translate('Bonus')}}
                         </div>
                     </div>
@@ -65,7 +65,7 @@
                         <div class="text-center moveup">
                             <img src='images/slide-images/cashout.png' class="landing_page-img header-img mx-1 @if($slideStatus == 'Cashouts') selected_wrapper @endif">
                         </div>
-                        <div class="text-center no_line_height settings_text mt_08">
+                        <div class="text-center no_line_height settings_text mt_05">
                             {{Translate('Cashouts')}}
                         </div>
                     </div>
@@ -76,7 +76,7 @@
                         <div class="text-center moveup">
                             <img src='images/slide-images/ranking.png' class="landing_page-img header-img mx-1 @if($slideStatus == 'Account Level') selected_wrapper @endif">
                         </div>
-                        <div class="text-center no_line_height settings_text mt_08">
+                        <div class="text-center no_line_height settings_text mt_05">
                             {{Translate('Account Level')}}
                         </div>
                     </div>

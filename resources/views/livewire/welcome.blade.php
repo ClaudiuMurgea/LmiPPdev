@@ -41,24 +41,27 @@
             @else
                 <img style="width:550px; height:auto;" class="welcome_img"  src='images/welcome-images/english.png'> 
             @endif
-            <a class="custom_btn2">
+
+            <a style="margin-bottom:2rem;" class="custom_btn2">
                 <span> 
                     <span class="welcome_info-wrapper">
                         <strong class="superbold full_width">
                             <div class="full_width d-flex justify-content-between">
-                                <div class="welcome_info pl_1-5">
-                                    {{ $userName }}
-                                </div>
-                                <div class="d-flex">
-                                    <img style="width:40px; height:auto;"  src='images/header-images/bonus.png'> 
-                                    <div class="welcome_info pr_1-5">
-                                        {{ number_format(intval($userPoints), 0, ',', '.') }}
-                                    </div>
+                                <div class="welcome_info px-3" style="display:inline-block;white-space: nowrap;overflow:hidden;">
+                                    {{ Str::limit(ucfirst($userName), 30) }}
                                 </div>
                             </div>
                         </strong>  
                     </span> 
                 </span>
+            </a>
+            <a style="background:rgba(0, 0, 0, 0.7) !important" class="custom_btn2">
+                <div class="d-flex justify-content-center">
+                    <img style="width:63px; height:auto;transform: translateY(-14px);"  src='images/header-images/bonus.png'>
+                    <div class="welcome_info"  style="margin-right:16px;display:inline-block;white-space: nowrap;overflow:hidden;line-height:1.1;">
+                        {{ Str::limit(number_format(intval($userPoints), 0, ',', '.'), 10) }}
+                    </div>
+                </div>
             </a>
         </div>
     @endif

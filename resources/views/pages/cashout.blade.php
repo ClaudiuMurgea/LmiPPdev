@@ -12,25 +12,26 @@
             background-size: cover;
         }
     </style>
-    <table class="table custom_table_background max_width text-white bolder radius_10 cashout_page mt_2 no_border_b">
+    <table class="table custom_table_background max_width text-white bolder radius_10 cashout_page mt_2 no_border_b font_size-1-4">
         <thead>
             <tr>                                                   
-                <th class="cashouts_slot-wrapper text-left"  scope="col">           {{ Translate('Slot') }}         </th>
-                <th class="cashouts_slot-wrapper pl_0-8"     scope="col">           {{ Translate('Type') }}         </th>
-                <th class="cashouts_value-wrapper text-left" scope="col">           {{ Translate('Value') }}        </th>
-                <th style="padding-left:10px;"               scope="col">           {{ Translate('Timestamp') }}    </th>
+                <th class="cashouts_slot-wrapper text-center"           scope="col" colspan="2">  {{ Translate('Slot') }}         </th>
+                <th class="cashouts_slot-wrapper pl_0-8 text-center"    scope="col" colspan="3">  {{ Translate('Type') }}         </th>
+                <th class="cashouts_value-wrapper text-center"          scope="col" colspan="3">  {{ Translate('Value') }}        </th>
+                <th style="padding-left:10px;" class="text-center"      scope="col" colspan="5">  {{ Translate('Timestamp') }}    </th>
             </tr>
         </thead>
         <tbody>
             @if(!count($cashoutValues))
-                <td class="no_border_b text-left text-center" colspan='3'> {{ Translate('This slot machine does not have cashouts!') }}    </td>
+                <td class="no_border_b text-left text-center" colspan='13'> {{ Translate('This slot machine does not have cashouts!') }}    </td>
             @else
+
                 @foreach($cashoutValues as $index => $cashout)
                     <tr>
-                        <td class="@if($loop->last) no_border_b @endif text-left pl_2"> {{ $cashout->Slot }}            </td>
-                        <td class="@if($loop->last) no_border_b @endif text-left">      {{ $cashout->CashoutType }}     </td>
-                        <td class="@if($loop->last) no_border_b @endif text-left" >     {{ $cashout->Amount }}          </td>
-                        <td class="@if($loop->last) no_border_b @endif">                {{ $cashout->Timestamp }}       </td>
+                        <td class="@if($loop->last) no_border_b @endif text-center"  colspan="2"> {{ $cashout->Slot }}            </td>
+                        <td class="@if($loop->last) no_border_b @endif text-center"  colspan="3"> {{ $cashout->CashoutType }}     </td>
+                        <td class="@if($loop->last) no_border_b @endif text-center"  colspan="3"> {{ $cashout->Amount }}          </td>
+                        <td class="@if($loop->last) no_border_b @endif text-center"  colspan="5"> {{ $cashout->Timestamp }}       </td>
                     </tr>
                 @endforeach
             @endif

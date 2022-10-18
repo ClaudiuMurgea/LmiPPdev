@@ -26,8 +26,8 @@ class Idle extends Component
         }
 
         // Setting the 'lang' variable to be the application default language
-        $appSettings         = MainSetting::on('mysql_main')->first();
-        $this->lang         = $appSettings->DefaultLandingPage;
+        $appSettings        = MainSetting::on('mysql_main')->first();
+        $this->lang         = $appSettings->DefaultLanguage;
     }
     public function render()
     {

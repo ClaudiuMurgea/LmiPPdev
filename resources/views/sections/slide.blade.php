@@ -4,7 +4,7 @@
         <h5 style="display:flex; align-items: center;margin-bottom:15px;position:relative;">
         @if($showBack)
             <button style="margin-bottom:-1px !important;" wire:click="back" class="custom-btn font_size-1-2"> 
-                <img style="height:20px;width:20px;margin:0 auto;margin-bottom:2px;" src='images/slide-images/back.png'>
+                <img style="height:24px;width:24px;margin:0 auto;margin-bottom:2px;" src='images/slide-images/back.png'>
                 {{ Translate('Back') }}
             </button>
         @endif 
@@ -21,7 +21,7 @@
                     background-size: 600% 600%;
                     animation: gradient 200s linear infinite;
                     animation-direction: alternate;
-                    font-weight:600;font-size:1.1rem" class="MultiCarousel-inner">
+                    font-weight:600;" class="MultiCarousel-inner font_size-1-4">
                     @if($availablePages)
                         @foreach($availablePages as $index => $page)
                             @switch(preg_replace("@\n@","",$page))
