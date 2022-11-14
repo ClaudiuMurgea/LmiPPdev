@@ -1,0 +1,38 @@
+.table1 {
+    table-layout: fixed;
+}
+.table1 thead th{
+    color: #fff;
+    height:35px;
+    font-weight:600;
+    background: #000;
+    font-size: 1.1rem;
+}
+.table1 thead th:empty{
+    background:transparent;
+    border:none;
+}
+.table1 tfoot td{
+    color: #000;
+    text-align:center;
+    text-shadow:1px 1px 1px #444;
+    padding:2px 0px;
+}
+.table1 tfoot th{
+    color:#f99301;
+}
+.table1 tbody td{
+    background: linear-gradient(to bottom, #de8005 1%, #feb34f 98%, #febe68 100%);
+    -moz-border-radius:2px;
+    -webkit-border-radius:2px;
+    
+    font-weight:600;
+    border-radius:2px;
+    text-align:center;
+    font-size:1.1rem;
+    padding:2px;
+    height:30px;
+}
+.opacity_0-9 {
+    opacity:0.9;
+}

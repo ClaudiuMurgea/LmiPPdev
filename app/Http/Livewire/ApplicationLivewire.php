@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\DB;
 use App\Models\CardColorBackground;
 use Illuminate\Support\Facades\Config;
 use App\Models\MasterOnlyPlayerSetting;
-use Illuminate\Support\Facades\Cookie;
+// use Illuminate\Support\Facades\Cookie;
 use Illuminate\Database\Eloquent\Collection;
 class ApplicationLivewire extends Component
 {
@@ -28,7 +28,7 @@ class ApplicationLivewire extends Component
     public $page;
     public $oldPage;
     public $isThisPageDefault;
-    public $MasterIP;
+    public $MasterIP = "";
     public $DeviceID;
     public $langStatus;
     public $slideStatus;
@@ -104,16 +104,29 @@ class ApplicationLivewire extends Component
             dump('                                            MAC is incorrect                                            ');
             abort(404);
         }
-
-        // Saving the mac inside a cookie if the cookie is not set (The cookie is used inside 'app/Http/Controllers/PidController.php')
-        if(!Cookie::get('LmiMacNew')){
-            Cookie::queue('LmiMacNew', $this->mac, 2147483647);
+        if(config('database.mac') == ""){
+            config(['database.mac' => $this->mac]);
         }
+        // Saving the mac inside a cookie if the cookie is not set (The cookie is used inside 'app/Http/Controllers/PidController.php')
+        // if(!Cookie::get('LmiMacNew')){
+        //     Cookie::queue('LmiMacNew', $this->mac, 2147483647);
+        //     // cookie()->queue("loginToken", $loginToken, 60*24*365*10, null, null, null, true, false, 'None');
+        // }
+        
 
         // DeviceID is used for Cashouts page
         $getDeviceID =  DB::connection('mysql_main')->select("SELECT DeviceID FROM lmi.devices_last WHERE MAC='$this->mac'");
-        $this->DeviceID = $getDeviceID[0]->DeviceID;
-
+        if(sizeof($getDeviceID) > 0)
+        {
+            $this->DeviceID = $getDeviceID[0]->DeviceID;
+        }
+        else 
+        {
+        // If the MAC is not recieved from the URL, the whole application is closed and a custom error is displayed
+            dump('                                     Interface is not registered!                                     ');
+            abort(404);
+        }
+        
         // use MAC to get PID (if it fails, the error is contained)
         try {
             $getPID = DB::connection('mysql_main')->select("select LmiPP.MAC2PID('".$this->mac."') PID");
@@ -134,7 +147,7 @@ class ApplicationLivewire extends Component
         // use PID to get the user name (only two names will be displayed)
         $getName = DB::connection('mysql_main')->select("select lmi.GET_PLAYER_NAME('".$this->pid."') Name");
             $this->userName = explode(" ",$getName[0]->Name);
-        if(strlen($getName[0]->Name) > 19)
+        if(strlen($getName[0]->Name) > 18)
         {
             $this->nameAnimation = true;
         }
@@ -279,7 +292,6 @@ class ApplicationLivewire extends Component
             $this->page     = $data;
             $this->oldPage  = $data;
     
-
             // $titleFormat becomes from AccountLevel = Account Level, puts a space before a capital letter (but not first letter)
             $titleFormat = preg_replace('/([a-z])([A-Z])/s','$1 $2', $data);
             $this->title = $titleFormat;

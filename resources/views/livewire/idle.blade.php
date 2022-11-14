@@ -7,13 +7,13 @@
   </div>
 
   <div style="width:100vw; height:100vh;z-index:10000;position:relative;" wire:click="showIdlePages()">
-    <div> <!-- id="image"  -->
-        <div> <!-- id="top"  -->
-            <div>&nbsp;</div> <!-- id="sky"  -->
+    <div id="image"> <!-- id="image"  -->
+        <div id="top"> <!-- id="top"  -->
+            <div id="sky">&nbsp;</div> <!-- id="sky"  -->
         </div>
 
-        <div> <!-- id="bottom"  -->
-            <div >&nbsp;</div> <!-- id="ground"  -->
+        <div id="bottom"> <!-- id="bottom"  -->
+            <div id="ground">&nbsp;</div> <!-- id="ground"  -->
         </div>
 
         <div id="text">
@@ -35,6 +35,6 @@
     </div>
   </div>
   <div class="verdana version">
-      Version 1.0.0
+      Version 1.0.1
   </div>
 </div>

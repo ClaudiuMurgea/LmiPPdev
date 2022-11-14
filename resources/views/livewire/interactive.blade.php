@@ -7,7 +7,7 @@
                 display:none !important;
             }
             .bghandler {
-                background: url("{{ asset('images/background-images/interactive.jpg') }}");
+                background: url("{{ asset('images/background-images/interactive.webp') }}");
                 min-height:100vh;
                 max-height:100vh;
                 min-width:100vw;
@@ -20,6 +20,7 @@
         </style>
         @include('utility.language')
         @if($cashouts)
+        
             <div style="max-height:90vh;" class="d-flex flex-column overflow app_wrapper custom_scrollbar">
                 @includeWhen($cashouts,     'pages.cashout')
             </div>
@@ -45,18 +46,18 @@
         @if($menu)
             <div style="width:100vw; height:100vh;" class="d-flex flex-column">
                 <div style="height:25vh; width:100vw;align-items:baseline;" class="d-flex justify-content-center">
-                    <img style="width:auto; height:130px;" src='images/header-images/PYRAMID.png'>
+                    <img style="width:auto; height:130px;" src='images/header-images/PYRAMID.webp'>
                 </div>
                 
                 <div style="transform:translateY(-35px);height:65vh; width:80vh;align-items:center;margin:0 auto;" class="d-flex justify-content-between">
                     <div wire:click="showThis('cashouts')" style="position:relative;z-index:1000;height:auto;width:auto;text-decoration:none;margin-top:3rem;" class="d-flex flex-column">
-                        <img style="width:110px; height:110px;" src='images/slide-images/cashout.png'>
+                        <img style="width:110px; height:110px;" src='images/slide-images/cashout.webp'>
                         <div class="text-center text-effect">
                             {{ Translate('Cashouts') }}
                         </div>
                     </div>
                     <div wire:click="showThis('jackpots')" style="position:relative;z-index:1000;height:auto;width:auto;text-decoration:none;margin-top:3rem;" class="d-flex flex-column">
-                        <img style="width:110px; height:110px;" src='images/slide-images/jackpot.png'>
+                        <img style="width:110px; height:110px;" src='images/slide-images/jackpot.webp'>
                         <div class="text-center text-effect">
                             {{ Translate('Jackpots') }}
                         </div>
@@ -116,7 +117,7 @@
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                         },
-                    url:'pidquery',
+                    url:"pidquery/" + lmiMac ,
                     dataType: 'json',
                     type:'POST',
                     data: {},

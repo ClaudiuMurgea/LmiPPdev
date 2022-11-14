@@ -1,0 +1,37 @@
+.bonus_wrapper {
+    line-height:1.5;
+    border-radius:12px;
+}
+.bonus_left {
+    width:65%; 
+    padding-left:1rem;
+    color:#fff;
+    border-right:none;
+    position:relative;
+    font-weight:600;
+    padding-top:5.5px;
+    padding-bottom:5px;
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+    background: linear-gradient(60deg, #2c3e50, #000000, #2c3e50, #222, #333, #444, #000);
+    animation: animatedgradient 20s ease alternate infinite;
+    background-size: 400% 400%;
+    border-right:none !important;
+    border:1px solid #2c3e50;
+}
+.bonus_right {
+    width:35%;
+    text-align:center;
+    background:#fff;
+    border-left:none;
+    font-weight:600;
+    padding-top:5.5px;
+    padding-bottom:5px;
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+    background: #ffa936;
+    animation: animatedgradient 20s ease alternate infinite;
+    background-size: 400% 400%;
+    border:1px solid #fdd017;
+    border-left:none !important;
+}

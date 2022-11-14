@@ -1,3 +1,4 @@
+<link rel="stylesheet" type="text/css" href="{{ asset('css/bonus.css') }}">
 <div class="bonus_page font_size-1-4">
 
     <div class="max_width d-flex mt_2 bonus_wrapper">

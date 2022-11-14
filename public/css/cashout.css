@@ -1,0 +1,17 @@
+.custom_table_background {
+    background: linear-gradient(60deg, #2c3e50, #000000, #2c3e50, #222);
+    animation: animatedgradient 10s ease alternate infinite;
+    background-size: 400% 400%;
+    table-layout: fixed;
+}
+.cashouts_slot-wrapper {
+    min-width:20%;
+}
+.cashouts_value_wrapper {
+    min-width:25%;
+}
+div:empty:before {
+    content:attr(data-placeholder);
+    color:#ccc;
+    font-weight:500;
+}

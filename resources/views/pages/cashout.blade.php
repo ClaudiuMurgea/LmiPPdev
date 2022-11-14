@@ -1,7 +1,8 @@
+<link rel="stylesheet" type="text/css" href="{{ asset('css/cashout.css') }}">
 <div id="cashouts_page" class="full_width">
     <style>
         .bghandler{
-            background: url("{{ asset('images/background-images/cashouts.jpg') }}");
+            background: url("{{ asset('images/background-images/cashouts.webp') }}");
             min-height:100vh;
             max-height:100vh;
             min-width:100vw;

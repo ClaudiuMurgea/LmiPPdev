@@ -1,7 +1,8 @@
+<link rel="stylesheet" type="text/css" href="{{ asset('css/jackpots.css') }}">
 <div id="jackpots_page" class="max_width mt-2">
     <style>
         .bghandler{
-            background: url("{{ asset('images/background-images/jackpots.jpg') }}");
+            background: url("{{ asset('images/background-images/jackpots.webp') }}");
             min-height:100vh;
             max-height:100vh;
             min-width:100vw;

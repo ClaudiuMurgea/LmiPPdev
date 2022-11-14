@@ -5,7 +5,7 @@ namespace App\Http\Livewire;
 use Livewire\Component;
 use App\Models\MainSetting;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Cookie;
+// use Illuminate\Support\Facades\Cookie;
 use App\Models\MasterOnlyPlayerSetting;
 
 class Welcome extends Component
@@ -23,10 +23,14 @@ class Welcome extends Component
         $this->mac = str_replace('"', "", $mac);
 
         // Saving the mac inside a cookie if the cookie is not set (The cookie is used inside 'app/Http/Controllers/PidController.php')
-        if(!Cookie::get('LmiMacNew')){
-            Cookie::queue('LmiMacNew', $this->mac, 2147483647);
-        }       
+        // if(!Cookie::get('LmiMacNew')){
+        //     Cookie::queue('LmiMacNew', $this->mac, 2147483647);
+        // }       
 
+        if(config('database.mac') == ""){
+            config(['database.mac' => $this->mac]);
+        }
+        
         // use MAC to get PID
         $getPID = DB::connection('mysql_main')->select("select LmiPP.MAC2PID('".$this->mac."') PID");
         $this->pid = $getPID[0]->PID;

@@ -29,7 +29,7 @@
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                         },
-                    url:'pidquery',
+                    url:"pidquery/" + lmiMac ,
                     dataType: 'json',
                     type:'POST',
                     data: {},
@@ -38,6 +38,7 @@
                     success : function(data){
                         if(data.success < 1)
                         {
+
                             window.location.href = "idle?MAC=" + lmiMac;
                         }
                     },

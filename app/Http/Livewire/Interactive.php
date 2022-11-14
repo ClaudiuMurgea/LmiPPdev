@@ -5,7 +5,7 @@ namespace App\Http\Livewire;
 use App\Models\MainSetting;
 use Livewire\Component;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Cookie;
+// use Illuminate\Support\Facades\Cookie;
 class Interactive extends Component
 {
     public $isLoading               = true;
@@ -29,10 +29,13 @@ class Interactive extends Component
         $this->mac = str_replace('"', "", $mac);
 
         // Saving the mac inside a cookie if the cookie is not set (The cookie is used inside 'app/Http/Controllers/PidController.php')
-        if(!Cookie::get('LmiMacNew')){
-            Cookie::queue('LmiMacNew', $this->mac, 2147483647);
+        // if(!Cookie::get('LmiMacNew')){
+        //     Cookie::queue('LmiMacNew', $this->mac, 2147483647);
+        // }
+        if(config('database.mac') == ""){
+            config(['database.mac' => $this->mac]);
         }
-
+        
         $appSettings        = MainSetting::on('mysql_main')->first();
         $defaultLanguage    = $appSettings->DefaultLanguage;
         \Session::forget('lang');
@@ -46,13 +49,24 @@ class Interactive extends Component
         {
             try {
                 $getDeviceID =  DB::connection('mysql_main')->select("SELECT DeviceID FROM lmi.devices_last WHERE MAC='$this->mac'");
-                $DeviceID = $getDeviceID[0]->DeviceID;
+
+                if(sizeof($getDeviceID) > 0)
+                {
+                    $DeviceID = $getDeviceID[0]->DeviceID;
+                }
+                else 
+                {
+                // If the MAC is not recieved from the URL, the whole application is closed and a custom error is displayed
+                    dump('                                     Interface is not registered!                                     ');
+                    abort(404);
+                }
 
             } catch (\Illuminate\Database\QueryException $e) {
                 return $e->getMessage();
             }
-
-            $cashoutValues= DB::connection('mysql_main')->select("call lmi.GetHandpaysAndTito('$this->mac', '9')");
+            $getSlot = DB::connection('mysql_main')->select("select lmi.Device2Slot('".$DeviceID."') Slot");
+            $slot = $getSlot[0]->Slot;
+            $cashoutValues= DB::connection('mysql_main')->select("call lmi.GetHandpaysAndTito('".$slot."', '9')");
         }
 
         // If the user is on Jackpots page, query the database for system and external jackpots

@@ -37,11 +37,10 @@
         <img class="welcome_background" src='images/background-images/welcome.jpg'>    
         <div class="welcome_wrapper">
             @if($lang == 'Ro')
-                <img style="width:550px; height:auto;" class="welcome_img"  src='images/welcome-images/romanian.png'> 
+                <img style="width:550px; height:auto;" class="welcome_img"  src='images/welcome-images/romanian.webp'> 
             @else
-                <img style="width:550px; height:auto;" class="welcome_img"  src='images/welcome-images/english.png'> 
+                <img style="width:550px; height:auto;" class="welcome_img"  src='images/welcome-images/english.webp'> 
             @endif
-
             <a style="margin-bottom:2rem;" class="custom_btn2">
                 <span> 
                     <span class="welcome_info-wrapper">
@@ -57,7 +56,7 @@
             </a>
             <a style="background:rgba(0, 0, 0, 0.7) !important" class="custom_btn2">
                 <div class="d-flex justify-content-center">
-                    <img style="width:63px; height:auto;transform: translateY(-14px);"  src='images/header-images/bonus.png'>
+                    <img style="width:63px; height:auto;transform: translateY(-14px);"  src='images/header-images/bonus.webp'>
                     <div class="welcome_info"  style="margin-right:16px;display:inline-block;white-space: nowrap;overflow:hidden;line-height:1.1;">
                         {{ Str::limit(number_format(intval($userPoints), 0, ',', '.'), 10) }}
                     </div>
